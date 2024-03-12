@@ -10,6 +10,8 @@ import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useCallback } from "react";
 import { Provider } from "react-redux";
+import { UserContext } from "./App/context/UserContext";
+import { SocketContextProvider } from "./App/context/SocketContext";
 import store from "./App/redux/store";
 const tokenCache = {
   async getToken(key) {
@@ -54,9 +56,13 @@ export default function App() {
       <View style={styles.container}>
         <SignedIn>
           <Provider store={store}>
-            <NavigationContainer>
-              <TabNavigation></TabNavigation>
-            </NavigationContainer>
+            <UserContext>
+              <SocketContextProvider>
+                <NavigationContainer>
+                  <TabNavigation></TabNavigation>
+                </NavigationContainer>
+              </SocketContextProvider>
+            </UserContext>
           </Provider>
         </SignedIn>
         <SignedOut>
