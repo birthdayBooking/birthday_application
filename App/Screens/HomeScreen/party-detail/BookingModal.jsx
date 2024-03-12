@@ -7,6 +7,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   TextInput,
+  Platform,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -43,6 +44,7 @@ export default function BookingModal({ partyId, showModal }) {
       userName: user?.fullName,
       // note: note,
     };
+    console.log(bookingData);
 
     dispatch(performBooking(bookingData));
     Toast.show({
@@ -81,7 +83,8 @@ export default function BookingModal({ partyId, showModal }) {
   return (
     <ScrollView>
       <KeyboardAvoidingView
-        style={{ padding: 20, marginTop: 10, marginBottom: 20 }}
+        style={{ padding: 20, marginTop: 10, marginBottom: 20, height: "100%" }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         <TouchableOpacity
           style={{
@@ -144,6 +147,7 @@ export default function BookingModal({ partyId, showModal }) {
         </View>
 
         {/* Note Section */}
+
         <View style={{ paddingTop: 20 }}>
           <Heading text={"Any Suggestion Note"} />
           <TextInput
@@ -195,6 +199,7 @@ const styles = StyleSheet.create({
     color: Color.BLACK,
     borderWidth: 1,
     borderRadius: 15,
+    height: 150,
     textAlignVertical: "top",
     fontSize: 16,
     fontFamily: "Outfit-Regular",

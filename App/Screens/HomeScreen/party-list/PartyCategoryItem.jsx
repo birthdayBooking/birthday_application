@@ -23,7 +23,7 @@ export default function PartyCategoryItem({ party, navigation, booking }) {
             fontSize: 15,
           }}
         >
-          {party.contactPerson}
+          {party?.contactPerson}
         </Text>
         <Text
           style={{
@@ -31,7 +31,7 @@ export default function PartyCategoryItem({ party, navigation, booking }) {
             fontSize: 19,
           }}
         >
-          {party.name}
+          {party?.name}
         </Text>
         {!booking?.id ? (
           <Text

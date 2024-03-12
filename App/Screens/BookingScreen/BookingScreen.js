@@ -9,7 +9,6 @@ export default function BookingScreen() {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
   const bookings = useSelector((state) => state.booking.booking);
-  console.log(bookings);
   const { user } = useUser();
   useEffect(() => {
     dispatch(fetchAllBookingByEmail(user?.primaryEmailAddress.emailAddress));
@@ -19,7 +18,7 @@ export default function BookingScreen() {
   return (
     <View style={{ padding: 20 }}>
       <PageHeading title={"My Bookings"} />
-      <View>
+      <View style={{ marginTop: 30 }}>
         <FlatList
           refreshing={loading}
           data={bookings?.bookings}

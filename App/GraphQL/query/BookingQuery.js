@@ -4,26 +4,15 @@ export const bookingPartyQuery = (bookingData) => {
   gql`
 mutation createBooking {
 createBooking(
-
     data: {
-    bookingStatus: Booked,
-    party: { connect: { id: "` +
-    bookingData.partyId +
-    `" }},
-    time: "` +
-    bookingData.time +
-    `",
-    date: "` +
-    bookingData.date +
-    `",
-    userEmail: "` +
-    bookingData.userEmail +
-    `",
-    userName: "` +
-    bookingData.userName +
-    `",
-    
-    }) {
+        time: "${bookingData.time}"
+        date: "${bookingData.date}"
+        userEmail: "${bookingData.userEmail}"
+        userName: "${bookingData.userName}"
+        bookingStatus: Booked
+        party: { connect: { id: "${bookingData.partyId}" } }
+    }
+      ) {
         id}
     publishManyBookings(to: PUBLISHED) {
         count
@@ -33,11 +22,9 @@ createBooking(
 };
 
 export const getAllBookingByEmailQuery = (email) => {
-  gql`
-    query MyQuery {
-    bookings(orderBy: updatedAt_DESC, where: { userEmail: "` +
-    email +
-    `" }) {
+  return gql`
+    query getAllBookingByEmail {
+    bookings(orderBy: updatedAt_DESC, where: { userEmail: "${email}"}) {
         time
         userEmail
         userName

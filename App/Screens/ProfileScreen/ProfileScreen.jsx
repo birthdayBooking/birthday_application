@@ -1,12 +1,26 @@
 import { useUser, useAuth } from "@clerk/clerk-expo";
-import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
+import {
+  FlatList,
+  Image,
+  Linking,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import Color from "../../Utils/Color";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 export default function ProfileScreen() {
   const { user } = useUser();
-
+  const { signOut } = useAuth();
   const navigation = useNavigation();
+  const onMessageBtnClick = () => {
+    Linking.openURL(
+      "mailto:" +
+        "dinhbse150702@fpt.edu.vn" +
+        "?subject= I am looking for your Service&body=Hi There,"
+    );
+  };
   const profileMenu = [
     {
       id: 1,
@@ -85,6 +99,17 @@ export default function ProfileScreen() {
           data={profileMenu}
           renderItem={({ item, index }) => (
             <TouchableOpacity
+              onPress={() => {
+                if (index === 3) {
+                  signOut();
+                } else if (index === 1) {
+                  navigation.navigate("booking");
+                } else if (index === 2) {
+                  onMessageBtnClick();
+                } else {
+                  navigation.navigate(item.name.toLowerCase());
+                }
+              }}
               style={{
                 display: "flex",
                 flexDirection: "row",

@@ -21,7 +21,7 @@ const bookingFailure = (error) => ({
 
 export const performBooking = (bookingData) => async (dispatch) => {
   try {
-    const response = GlobalApi.createBookingParty(bookingData);
+    const response = await GlobalApi.createBookingParty(bookingData);
     dispatch(bookingSuccess(response));
   } catch (error) {
     dispatch(bookingFailure(error.message));
@@ -29,6 +29,11 @@ export const performBooking = (bookingData) => async (dispatch) => {
 };
 
 export const fetchAllBookingByEmail = (email) => async (dispatch) => {
-  const result = await GlobalApi.getAllBookingByEmail(email);
-  dispatch(getAllBookingByEmail(result));
+  try {
+    const response = await GlobalApi.getAllBookingByEmail(email);
+
+    dispatch(getAllBookingByEmail(response));
+  } catch (error) {
+    dispatch(bookingFailure(error.message));
+  }
 };

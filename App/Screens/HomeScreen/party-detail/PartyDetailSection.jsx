@@ -33,7 +33,7 @@ export default function PartyDetailSection({ navigation }) {
   };
   return (
     <View>
-      <ScrollView style={{ height: "90%" }}>
+      <View style={{ height: "90%" }}>
         <TouchableOpacity
           style={styles.backBtn}
           onPress={() => navigation.goBack()}
@@ -42,7 +42,7 @@ export default function PartyDetailSection({ navigation }) {
         </TouchableOpacity>
         <Image
           source={{ uri: party?.images[0]?.url }}
-          style={{ width: "100%", height: 300 }}
+          style={{ width: "100%", height: 240 }}
         />
         <View style={styles.infoContainer}>
           <Text style={{ fontFamily: "Outfit-Bold", fontSize: 25 }}>
@@ -105,7 +105,7 @@ export default function PartyDetailSection({ navigation }) {
           ></View>
           <PartyPhotoSection party={party} />
         </View>
-      </ScrollView>
+      </View>
       <View style={styles.btnContainer}>
         <TouchableOpacity
           style={styles.messageBtn}

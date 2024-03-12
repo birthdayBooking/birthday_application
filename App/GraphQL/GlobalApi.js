@@ -25,11 +25,20 @@ const getPartiesByCategoryName = async (categoryName) => {
 };
 
 const createBookingParty = async (bookingData) => {
-  return await request(GRAPHQL_BASE_URL, bookingPartyQuery(bookingData));
+  const result = await request(
+    GRAPHQL_BASE_URL,
+    bookingPartyQuery(bookingData)
+  );
+  console.log("result", result);
+  return result;
 };
 
 const getAllBookingByEmail = async (email) => {
-  return await request(GRAPHQL_BASE_URL, getAllBookingByEmailQuery(email));
+  const result = await request(
+    GRAPHQL_BASE_URL,
+    getAllBookingByEmailQuery(email)
+  );
+  return result;
 };
 
 export default {
