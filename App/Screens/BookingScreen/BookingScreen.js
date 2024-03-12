@@ -17,7 +17,6 @@ export default function BookingScreen() {
 
   return (
     <View style={{ padding: 20 }}>
-      <PageHeading title={"My Bookings"} />
       <View style={{ marginTop: 30 }}>
         <FlatList
           refreshing={loading}
