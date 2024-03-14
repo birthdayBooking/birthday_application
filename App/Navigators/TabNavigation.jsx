@@ -10,11 +10,13 @@ import ChatMessagesScreen from "../Screens/ChatScreen/ChatMessagesScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native";
+
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
+
 export default function TabNavigation() {
+  const navigation = useNavigation();
   const CustomButton = (props) => {
-    const navigation = useNavigation();
     const { navigateName, screen } = props;
 
     const handlePress = () => {
@@ -22,6 +24,11 @@ export default function TabNavigation() {
     };
     return <TouchableOpacity {...props} onPress={handlePress} />;
   };
+  const BackButton = ({ onPress }) => (
+    <TouchableOpacity onPress={onPress} style={{ marginLeft: 15 }}>
+      <FontAwesome6 name="arrow-left" size={24} color="black" />
+    </TouchableOpacity>
+  );
   const ChatStack = () => (
     <Stack.Navigator>
       <Stack.Screen
@@ -29,9 +36,18 @@ export default function TabNavigation() {
         component={ChatsScreen}
         options={() => ({
           headerShown: true,
+          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
         })}
       />
-      <Stack.Screen name="Messages" component={ChatMessagesScreen} />
+      <Stack.Screen
+        name="Messages"
+        component={ChatMessagesScreen}
+        options={{
+          tabBarStyle: {
+            display: "none",
+          },
+        }}
+      />
     </Stack.Navigator>
   );
 
@@ -94,13 +110,16 @@ export default function TabNavigation() {
               Chat
             </Text>
           ),
-
+          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
           tabBarIcon: ({ color, size }) => (
             <FontAwesome6 name="rocketchat" size={24} color="black" />
           ),
           tabBarButton: (props) => (
             <CustomButton {...props} navigateName="ChatRoot" screen="Chat" />
           ),
+          tabBarStyle: {
+            display: "none",
+          },
         }}
       />
     </Tab.Navigator>
