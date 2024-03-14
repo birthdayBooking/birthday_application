@@ -9,7 +9,7 @@ export default function PartyItem({ item }) {
     <TouchableOpacity
       style={styles.container}
       onPress={() =>
-        navigation.push("party-detail", {
+        navigation.navigate("party-detail", {
           party: item,
         })
       }

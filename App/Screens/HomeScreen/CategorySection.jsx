@@ -35,7 +35,7 @@ export default function CategorySection({ navigation }) {
             <TouchableOpacity
               style={styles.container}
               onPress={() =>
-                navigation.push("party-list", {
+                navigation.navigate("party-list", {
                   categoryName: item.name,
                 })
               }

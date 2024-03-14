@@ -9,49 +9,90 @@ import {
   TextInput,
   Platform,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import CalendarPicker from "react-native-calendar-picker";
 import Color from "../../../Utils/Color";
 import Heading from "../../../Components/Heading";
 import { useDispatch } from "react-redux";
 import { performBooking } from "../../../redux/actions/bookingAction";
-import { useUser } from "@clerk/clerk-expo";
 import Toast from "react-native-toast-message";
 import moment from "moment/moment";
-export default function BookingModal({ partyId, showModal }) {
+import { UserType } from "../../../context/UserContext"
+import { useNavigation } from "@react-navigation/native";
+
+
+export default function BookingModal({ partyId, showModal, navigation }) {
+  const [services, setServices] = useState([]);
   const [timeList, setTimeList] = useState([]);
   const [selectedTime, setSelectedTime] = useState();
-  const [selectedDate, setSelectedDate] = useState();
+  const [selectedDate, setSelectedDate] = useState(
+    moment().add(2, "days").toDate()
+  );
   const [note, setNote] = useState();
-  const { user } = useUser();
-
+  const { userId, setUserId } = useContext(UserType);
+  const minDateCanBooking = moment().add(2, "days").toDate();
   const dispatch = useDispatch();
 
-  const handleSubmit = () => {
-    Toast.show({
-      type: "success",
-      text1: "Please select date and time, Thank you! 👋",
-    });
-    if (!selectedDate || !selectedTime) {
-      return;
-    }
-    const bookingData = {
-      partyId: partyId,
-      time: selectedTime,
-      date: moment(selectedDate).format("DD-MM-yyyy"),
-      userEmail: user?.primaryEmailAddress.emailAddress,
-      userName: user?.fullName,
-      // note: note,
-    };
-    console.log(bookingData);
+  const handleSubmit = async () => {
+    
+    try {
+      if (!selectedDate || !selectedTime) {
+        Toast.show({
+          type: "warning",
+          text1: "Please select date and time. 👋",
+        });
+        return;
+      }
+      let totalAmount = 0;
+      selectedServices.forEach(serviceId => {
+        // Lấy giá của dịch vụ từ cơ sở dữ liệu hoặc từ thông tin được cung cấp
+        const servicePrice = getServicePrice(serviceId); // Giả sử hàm này trả về giá của dịch vụ
+        totalAmount += servicePrice;
+      });
+      // Tạo bookingData từ các giá trị đã có
+      const bookingData = {
+        customerId: userId,
+        partyId: '65e043d9037d564848dc970f',
+        extraService: selectedServices,
+        time: selectedTime,
+        total: totalAmount,
+        orderDate: moment(selectedDate).format("DD-MM-yyyy"),
+        notes: note,
+      };
+      console.log(bookingData)
 
-    dispatch(performBooking(bookingData));
-    Toast.show({
-      type: "success",
-      text1: "Booking Created Successfully 👋",
-    });
-    showModal();
+      // Gửi dữ liệu bookingData lên API để tạo đơn hàng mới
+      const response = await fetch('https://birthday-backend-8sh5.onrender.com/api/v1/orders/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(bookingData),
+      });
+
+      if (!response.ok) {
+        console.log(response);
+      }
+
+      const responseData = await response.json();
+      console.log('Response from API:', responseData);
+
+      // Nếu tạo đơn hàng thành công, chuyển sang trang thanh toán
+      navigation.navigate('payment');
+      Toast.show({
+        type: 'success',
+        text1: 'Booking Created Successfully. 👋',
+      });
+      showModal(); // Hiển thị modal (nếu cần)
+    } catch (error) {
+      console.error('Error:', error);
+      // Xử lý lỗi khi gọi API
+      Toast.show({
+        type: 'error',
+        text1: 'Failed to process booking. Please try again later. 👋',
+      });
+    }
   };
 
   useEffect(() => {
@@ -80,12 +121,27 @@ export default function BookingModal({ partyId, showModal }) {
     setTimeList(timeList);
   };
 
+const handleSend = () =>{
+  console.log("party-service")
+  navigation.push(
+    'party-service'
+  )
+  showModal()
+}
   return (
-    <ScrollView>
-      <KeyboardAvoidingView
-        style={{ padding: 20, marginTop: 10, marginBottom: 20, height: "100%" }}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-      >
+    <KeyboardAvoidingView
+      style={{
+        paddingVertical: 10,
+        marginHorizontal: 5,
+        marginTop: 10,
+        marginBottom: 20,
+        height: "100%",
+        flex: 1,
+      }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <ScrollView>
+
         <TouchableOpacity
           style={{
             display: "flex",
@@ -112,11 +168,12 @@ export default function BookingModal({ partyId, showModal }) {
           <CalendarPicker
             onDateChange={setSelectedDate}
             width={340}
-            minDate={Date.now()}
-            todayBackgroundColor={Color.BLACK}
+            minDate={minDateCanBooking}
+            // todayBackgroundColor={Color.BLACK}
             todayTextStyle={{ color: Color.WHITE }}
             selectedDayColor={Color.PRIMARY}
             selectedDayTextColor={Color.WHITE}
+            selectedStartDate={selectedDate}
           />
         </View>
 
@@ -146,8 +203,22 @@ export default function BookingModal({ partyId, showModal }) {
           ></FlatList>
         </View>
 
-        {/* Note Section */}
+        {/* Service Select Section */}
+        <View style={{ marginTop: 20 }}>
+          <Heading text={"Select Additional Services"} />
+          {/* Danh sách các dịch vụ lẻ */}
+          {services.map((service) => (
+            <View key={service._id} style={{ flexDirection: "row", alignItems: "center" }}>
+              <CheckBox
+                value={selectedServices.includes(service._id)}
+                onValueChange={() => handleServiceSelect(service._id)}
+              />
+              <Text>{service.name}</Text>
+            </View>
+          ))}
+        </View>
 
+        {/* Note Section */}
         <View style={{ paddingTop: 20 }}>
           <Heading text={"Any Suggestion Note"} />
           <TextInput
@@ -158,6 +229,13 @@ export default function BookingModal({ partyId, showModal }) {
             onChangeText={setNote}
           />
         </View>
+        <TouchableOpacity
+          style={{ marginTop: 15 }}
+          onPress={() => handleSend()}
+        >
+          <Text style={styles.confirmBtn}>Add Service</Text>
+        </TouchableOpacity>
+
 
         {/* Confirm Button  */}
         <TouchableOpacity
@@ -166,8 +244,9 @@ export default function BookingModal({ partyId, showModal }) {
         >
           <Text style={styles.confirmBtn}>Confirm & Booking</Text>
         </TouchableOpacity>
-      </KeyboardAvoidingView>
-    </ScrollView>
+
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -204,6 +283,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "Outfit-Regular",
     borderColor: Color.PRIMARY,
+    padding: 10,
   },
   confirmBtn: {
     textAlign: "center",

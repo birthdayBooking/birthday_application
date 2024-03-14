@@ -5,25 +5,53 @@ import { createStackNavigator } from "@react-navigation/stack";
 import PartyCategorySection from "../Screens/HomeScreen/party-list/PartyCategorySection";
 import PartyDetailSection from "../Screens/HomeScreen/party-detail/PartyDetailSection";
 import ChatMessagesScreen from "../Screens/ChatScreen/ChatMessagesScreen";
+import BookingServiceScreen from "../Screens/BookingScreen/BookingServiceScreen";
+import PaymentScreen from "../Screens/BookingScreen/PaymentScreen";
 
-const Stack = createStackNavigator();
 export default function HomeNavigation() {
+
+  const Stack = createStackNavigator();
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+    
+    >
       <Stack.Screen
         name="home-main"
         component={HomeScreen}
-        options={{ headerShown: false }}
+        options={() => ({
+          
+          headerShown: false
+        })}
       />
       <Stack.Screen
         name="party-list"
         component={PartyCategorySection}
-        options={{ headerShown: false }}
+        options={() => ({
+          
+          headerShown: false
+        })}
       />
       <Stack.Screen
         name="party-detail"
         component={PartyDetailSection}
-        options={{ headerShown: false }}
+        options={() => ({
+          
+          headerShown: false
+        })}
+      />
+       <Stack.Screen
+        name="party-service"
+        component={BookingServiceScreen}
+        options={() => ({
+          headerShown: false
+        })}
+      />
+      <Stack.Screen
+        name="payment"
+        component={PaymentScreen}
+        options={() => ({
+          headerShown: false
+        })}
       />
     </Stack.Navigator>
   );

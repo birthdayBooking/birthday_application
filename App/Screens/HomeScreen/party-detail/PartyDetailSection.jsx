@@ -140,6 +140,7 @@ export default function PartyDetailSection({ navigation }) {
       </View>
       <Modal animationType="slide" visible={showModal}>
         <BookingModal
+          navigation={navigation}
           partyId={party?.id}
           showModal={() => setShowModal(!showModal)}
         />
