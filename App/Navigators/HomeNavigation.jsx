@@ -5,6 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import PartyCategorySection from "../Screens/HomeScreen/party-list/PartyCategorySection";
 import PartyDetailSection from "../Screens/HomeScreen/party-detail/PartyDetailSection";
 import PaymentScreen from "../Screens/BookingScreen/PaymentScreen";
+import ChatMessagesScreen from "../Screens/ChatScreen/ChatMessagesScreen";
 
 export default function HomeNavigation() {
   const Stack = createStackNavigator();
@@ -36,6 +37,13 @@ export default function HomeNavigation() {
         component={PaymentScreen}
         options={() => ({
           headerShown: false,
+        })}
+      />
+      <Stack.Screen
+        name="chat-message"
+        component={ChatMessagesScreen}
+        options={() => ({
+          headerShown: true,
         })}
       />
     </Stack.Navigator>

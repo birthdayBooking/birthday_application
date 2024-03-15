@@ -8,7 +8,7 @@ export default function PartyAboutMeSection({ party }) {
 
   return (
     <View>
-      <Heading text={"About me"} />
+      <Heading text={"About Party"} />
       <Text
         style={{
           fontFamily: "Outfit-Regular",
@@ -18,9 +18,23 @@ export default function PartyAboutMeSection({ party }) {
         }}
         numberOfLines={isReadMore ? 20 : 5}
       >
-        {party?.about}
+        {party?.mainDetail}
       </Text>
-      <TouchableOpacity onPress={() => setIsReadMore(!isReadMore)}>
+      {party?.perks.map((perk, index) => (
+        <Text
+          key={index}
+          style={{
+            fontFamily: "Outfit-Regular",
+            color: Color.GRAY,
+            lineHeight: 28,
+            fontSize: 16,
+          }}
+        >
+          {perk}
+        </Text>
+      ))}
+
+      {/* <TouchableOpacity onPress={() => setIsReadMore(!isReadMore)}>
         <Text
           style={{
             color: Color.PRIMARY,
@@ -30,7 +44,7 @@ export default function PartyAboutMeSection({ party }) {
         >
           {isReadMore ? "Read Less" : "Read More"}
         </Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 }

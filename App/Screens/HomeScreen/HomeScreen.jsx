@@ -1,4 +1,9 @@
-import { Keyboard, TouchableWithoutFeedback, View } from "react-native";
+import {
+  Keyboard,
+  TouchableWithoutFeedback,
+  View,
+  FlatList,
+} from "react-native";
 import HeaderSection from "./HeaderSection";
 import SliderSection from "./SliderSection";
 import CategorySection from "./CategorySection";
@@ -6,6 +11,7 @@ import PartySection from "./PartySection";
 import { useContext, useEffect } from "react";
 import { useUser } from "@clerk/clerk-expo";
 import { UserType } from "../../context/UserContext";
+import { ScrollView } from "react-native-gesture-handler";
 
 export default function HomeScreen({ navigation }) {
   const { user } = useUser();
@@ -32,7 +38,6 @@ export default function HomeScreen({ navigation }) {
       );
 
       const response = await result.json();
-      console.log(response);
       setUserId(response._id);
     } catch (error) {
       console.log("Error saving user", error);
@@ -44,14 +49,34 @@ export default function HomeScreen({ navigation }) {
     saveUser();
   }, [user]);
 
+  const data = [
+    { key: "slider" },
+    { key: "categories" },
+    { key: "party" },
+    // Add more sections if needed
+  ];
+  const renderItem = ({ item }) => {
+    switch (item.key) {
+      case "slider":
+        return <SliderSection />;
+      case "categories":
+        return <CategorySection navigation={navigation} />;
+      case "party":
+        return <PartySection />;
+      // Add more cases if needed
+      default:
+        return null;
+    }
+  };
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <HeaderSection />
-      <View style={{ padding: 20 }}>
-        <SliderSection />
-        <CategorySection navigation={navigation} />
-        <PartySection />
-      </View>
+      <FlatList
+        data={data}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.key}
+        contentContainerStyle={{ padding: 20 }}
+      />
     </View>
   );
 }

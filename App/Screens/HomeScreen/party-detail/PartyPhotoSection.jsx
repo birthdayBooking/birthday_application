@@ -12,7 +12,7 @@ export default function PartyPhotoSection({ party }) {
         numColumns={2}
         renderItem={({ item }) => (
           <Image
-            source={{ uri: item.url }}
+            source={{ uri: item }}
             style={{
               width: "100%",
               flex: 1,
