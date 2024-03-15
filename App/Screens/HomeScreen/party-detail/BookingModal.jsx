@@ -78,13 +78,14 @@ export default function BookingModal({ partyId, showModal, navigation }) {
         // return totalAmount
       }, 0);
 
+      const totalForBooking = total + partyId.price;
       // Tạo bookingData từ các giá trị đã có
       const bookingData = {
         customerId: userId,
         partyId: "65e043d9037d564848dc970f",
         extraService: selectedServices,
         time: selectedTime,
-        total: total,
+        total: totalForBooking,
         orderDate: selectedDate,
         notes: note,
       };
@@ -105,11 +106,11 @@ export default function BookingModal({ partyId, showModal, navigation }) {
       }
 
       const supported = await Linking.canOpenURL(
-        `https://birthday-backend-8sh5.onrender.com/api/v1/payment/create_payment_url?amount=${total}`
+        `https://birthday-backend-8sh5.onrender.com/api/v1/payment/create_payment_url?amount=${totalForBooking}`
       );
       if (supported) {
         await Linking.openURL(
-          `https://birthday-backend-8sh5.onrender.com/api/v1/payment/create_payment_url?amount=${total}`
+          `https://birthday-backend-8sh5.onrender.com/api/v1/payment/create_payment_url?amount=${totalForBooking}`
         );
       } else {
         Alert.alert(
