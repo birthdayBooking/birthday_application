@@ -34,7 +34,6 @@ export default function TabNavigation() {
       <Stack.Screen name="Messages" component={ChatMessagesScreen} />
     </Stack.Navigator>
   );
-
   return (
     <Tab.Navigator
       screenOptions={{

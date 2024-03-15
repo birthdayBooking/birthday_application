@@ -7,6 +7,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   TextInput,
+  Modal,
   Platform,
 } from "react-native";
 import React, { useEffect, useState, useContext } from "react";
@@ -18,9 +19,10 @@ import { useDispatch } from "react-redux";
 import { performBooking } from "../../../redux/actions/bookingAction";
 import Toast from "react-native-toast-message";
 import moment from "moment/moment";
-import { UserType } from "../../../context/UserContext"
+import Checkbox from "expo-checkbox";
+import { UserType } from "../../../context/UserContext";
 import { useNavigation } from "@react-navigation/native";
-
+import BookingServiceScreen from "../../BookingScreen/BookingServiceModal";
 
 export default function BookingModal({ partyId, showModal, navigation }) {
   const [services, setServices] = useState([]);
@@ -29,13 +31,32 @@ export default function BookingModal({ partyId, showModal, navigation }) {
   const [selectedDate, setSelectedDate] = useState(
     moment().add(2, "days").toDate()
   );
+  const [openPopUp, setOpenPopUp] = useState(false);
   const [note, setNote] = useState();
+  const [selectedServices, setSelectedServices] = useState([]);
   const { userId, setUserId } = useContext(UserType);
   const minDateCanBooking = moment().add(2, "days").toDate();
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    fetchServices();
+  }, []);
+
+  const fetchServices = async () => {
+    try {
+      const response = await fetch(
+        "https://birthday-backend-8sh5.onrender.com/api/v1/services"
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setServices(data);
+      }
+    } catch (error) {
+      console.error("Failed to fetch services:", error);
+    }
+  };
+
   const handleSubmit = async () => {
-    
     try {
       if (!selectedDate || !selectedTime) {
         Toast.show({
@@ -44,53 +65,60 @@ export default function BookingModal({ partyId, showModal, navigation }) {
         });
         return;
       }
-      let totalAmount = 0;
-      selectedServices.forEach(serviceId => {
-        // Lấy giá của dịch vụ từ cơ sở dữ liệu hoặc từ thông tin được cung cấp
-        const servicePrice = getServicePrice(serviceId); // Giả sử hàm này trả về giá của dịch vụ
-        totalAmount += servicePrice;
-      });
+      const total = selectedServices.reduce((totalAmount, serviceId) => {
+        const SelectServicePrice = services.find((service) => {
+          return service._id === serviceId;
+        });
+        return SelectServicePrice
+          ? totalAmount + SelectServicePrice.price
+          : totalAmount;
+        // return totalAmount
+      }, 0);
+
       // Tạo bookingData từ các giá trị đã có
       const bookingData = {
         customerId: userId,
-        partyId: '65e043d9037d564848dc970f',
+        partyId: "65e043d9037d564848dc970f",
         extraService: selectedServices,
         time: selectedTime,
-        total: totalAmount,
-        orderDate: moment(selectedDate).format("DD-MM-yyyy"),
+        total: total,
+        orderDate: selectedDate,
         notes: note,
       };
-      console.log(bookingData)
+      console.log(bookingData);
 
       // Gửi dữ liệu bookingData lên API để tạo đơn hàng mới
-      const response = await fetch('https://birthday-backend-8sh5.onrender.com/api/v1/orders/create', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(bookingData),
-      });
+      const response = await fetch(
+        "https://birthday-backend-8sh5.onrender.com/api/v1/orders/create",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(bookingData),
+        }
+      );
 
       if (!response.ok) {
         console.log(response);
       }
 
       const responseData = await response.json();
-      console.log('Response from API:', responseData);
+      console.log("Response from API:", responseData);
 
       // Nếu tạo đơn hàng thành công, chuyển sang trang thanh toán
-      navigation.navigate('payment');
+      navigation.navigate("payment");
       Toast.show({
-        type: 'success',
-        text1: 'Booking Created Successfully. 👋',
+        type: "success",
+        text1: "Booking Created Successfully. 👋",
       });
       showModal(); // Hiển thị modal (nếu cần)
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
       // Xử lý lỗi khi gọi API
       Toast.show({
-        type: 'error',
-        text1: 'Failed to process booking. Please try again later. 👋',
+        type: "error",
+        text1: "Failed to process booking. Please try again later. 👋",
       });
     }
   };
@@ -121,13 +149,11 @@ export default function BookingModal({ partyId, showModal, navigation }) {
     setTimeList(timeList);
   };
 
-const handleSend = () =>{
-  console.log("party-service")
-  navigation.push(
-    'party-service'
-  )
-  showModal()
-}
+  const handleCloseModal = (selectedServices) => {
+    setSelectedServices(selectedServices);
+    setOpenPopUp(!openPopUp);
+  };
+
   return (
     <KeyboardAvoidingView
       style={{
@@ -141,7 +167,6 @@ const handleSend = () =>{
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <ScrollView>
-
         <TouchableOpacity
           style={{
             display: "flex",
@@ -207,16 +232,22 @@ const handleSend = () =>{
         <View style={{ marginTop: 20 }}>
           <Heading text={"Select Additional Services"} />
           {/* Danh sách các dịch vụ lẻ */}
-          {services.map((service) => (
-            <View key={service._id} style={{ flexDirection: "row", alignItems: "center" }}>
-              <CheckBox
-                value={selectedServices.includes(service._id)}
-                onValueChange={() => handleServiceSelect(service._id)}
-              />
-              <Text>{service.name}</Text>
-            </View>
-          ))}
+          <TouchableOpacity
+            style={{ marginTop: 15 }}
+            onPress={() => setOpenPopUp(!openPopUp)}
+          >
+            <Text style={styles.confirmBtn}>Add Service</Text>
+          </TouchableOpacity>
         </View>
+        <Modal animationType="slide" visible={openPopUp}>
+          <BookingServiceScreen
+            services={services}
+            navigation={navigation}
+            openPopUp={() => setOpenPopUp(!openPopUp)}
+            onCloseModal={handleCloseModal}
+            selectBefore={selectedServices}
+          />
+        </Modal>
 
         {/* Note Section */}
         <View style={{ paddingTop: 20 }}>
@@ -229,13 +260,6 @@ const handleSend = () =>{
             onChangeText={setNote}
           />
         </View>
-        <TouchableOpacity
-          style={{ marginTop: 15 }}
-          onPress={() => handleSend()}
-        >
-          <Text style={styles.confirmBtn}>Add Service</Text>
-        </TouchableOpacity>
-
 
         {/* Confirm Button  */}
         <TouchableOpacity
@@ -244,7 +268,6 @@ const handleSend = () =>{
         >
           <Text style={styles.confirmBtn}>Confirm & Booking</Text>
         </TouchableOpacity>
-
       </ScrollView>
     </KeyboardAvoidingView>
   );
