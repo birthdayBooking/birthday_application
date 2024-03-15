@@ -1,41 +1,46 @@
-import React, { useState, useEffect, useContext } from 'react'; // Import useContext từ thư viện react
-import { View, Text, FlatList, ActivityIndicator } from 'react-native';
+// HistoryScreen.js
+import React, { useState, useEffect, useContext } from 'react';
+import { View, Text, FlatList, ActivityIndicator, TouchableOpacity, StyleSheet } from 'react-native';
 import { UserType } from "../../context/UserContext";
+import { useNavigation } from '@react-navigation/native';
 
 const HistoryScreen = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { userId } = useContext(UserType); // Sử dụng ngữ cảnh người dùng
-
-  useEffect(() => {
-    fetchOrders();
-  }, [userId]); // Thêm userId vào mảng phụ thuộc để gọi fetchOrders khi userId thay đổi
+  const { userId } = useContext(UserType);
+  const navigation = useNavigation();
 
   const fetchOrders = async () => {
     try {
-      const response = await fetch(`http://localhost:9902/api/v1/orders/getByIdCustomer/${userId}`);
+      const response = await fetch(`https://birthday-backend-8sh5.onrender.com/api/v1/orders/getByIdCustomer/${userId}`);
       const data = await response.json();
       setOrders(data);
       setLoading(false);
     } catch (error) {
-      
       console.error('Lỗi khi lấy lịch sử mua hàng:', error);
-      console.log(userId)
       setLoading(false);
     }
   };
 
+  useEffect(() => {
+    fetchOrders();
+  }, [userId]);
+
+  const handleOrderPress = (orderId) => {
+    navigation.navigate('OrderDetail', { orderId });
+  };
+
   const renderOrderItem = ({ item }) => (
-    <View style={{ padding: 10, borderBottomWidth: 1, borderBottomColor: '#ccc' }}>
-      <Text style={{ fontSize: 16 }}>Mã đơn hàng: {item._id}</Text>
-      <Text style={{ fontSize: 14 }}>Ngày đặt hàng: {item.orderDate}</Text>
-      <Text style={{ fontSize: 14 }}>Tổng số tiền: ${item.total}</Text>
-      <Text style={{ fontSize: 14 }}>Trạng thái: {item.status}</Text>
-    </View>
+    <TouchableOpacity onPress={() => handleOrderPress(item._id)} style={styles.orderItem}>
+      <Text style={styles.orderText}>Mã đơn hàng: {item._id}</Text>
+      <Text style={styles.orderText}>Ngày đặt hàng: {item.orderDate}</Text>
+      <Text style={styles.orderText}>Tổng số tiền: ${item.total}</Text>
+      <Text style={styles.orderText}>Trạng thái: {item.status}</Text>
+    </TouchableOpacity>
   );
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <View style={styles.container}>
       {loading ? (
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (
@@ -43,11 +48,30 @@ const HistoryScreen = () => {
           data={orders}
           renderItem={renderOrderItem}
           keyExtractor={(item) => item._id.toString()}
-          style={{ width: '100%' }}
+          style={styles.flatList}
         />
       )}
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  flatList: {
+    width: '100%',
+  },
+  orderItem: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+  },
+  orderText: {
+    fontSize: 16,
+  },
+});
 
 export default HistoryScreen;
