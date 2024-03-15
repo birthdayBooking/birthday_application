@@ -5,7 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import PartyCategorySection from "../Screens/HomeScreen/party-list/PartyCategorySection";
 import PartyDetailSection from "../Screens/HomeScreen/party-detail/PartyDetailSection";
 import PaymentScreen from "../Screens/BookingScreen/PaymentScreen";
-
+import HistoryScreen from "../Screens/BookingScreen/HistoryScreen";
 export default function HomeNavigation() {
   const Stack = createStackNavigator();
   return (

@@ -51,6 +51,7 @@ export default function HomeScreen({ navigation }) {
         <SliderSection />
         <CategorySection navigation={navigation} />
         <PartySection />
+        
       </View>
     </View>
   );
