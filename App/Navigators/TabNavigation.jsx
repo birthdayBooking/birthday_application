@@ -11,12 +11,14 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native";
 
+
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 export default function TabNavigation() {
   const navigation = useNavigation();
   const CustomButton = (props) => {
+
     const { navigateName, screen } = props;
 
     const handlePress = () => {
@@ -24,11 +26,13 @@ export default function TabNavigation() {
     };
     return <TouchableOpacity {...props} onPress={handlePress} />;
   };
+
   const BackButton = ({ onPress }) => (
     <TouchableOpacity onPress={onPress} style={{ marginLeft: 15 }}>
       <FontAwesome6 name="arrow-left" size={24} color="black" />
     </TouchableOpacity>
   );
+
   const ChatStack = () => (
     <Stack.Navigator>
       <Stack.Screen
@@ -48,6 +52,7 @@ export default function TabNavigation() {
           },
         }}
       />
+
     </Stack.Navigator>
   );
 
@@ -110,7 +115,9 @@ export default function TabNavigation() {
               Chat
             </Text>
           ),
+
           headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
+
           tabBarIcon: ({ color, size }) => (
             <FontAwesome6 name="rocketchat" size={24} color="black" />
           ),
@@ -120,6 +127,7 @@ export default function TabNavigation() {
           tabBarStyle: {
             display: "none",
           },
+
         }}
       />
     </Tab.Navigator>
