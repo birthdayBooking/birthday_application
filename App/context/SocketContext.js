@@ -16,7 +16,7 @@ export const SocketContextProvider = ({ children }) => {
   const { userId, setUserId } = useContext(UserType);
 
   useEffect(() => {
-    console.log(userId);
+    console.log("online", userId);
     if (userId) {
       const socket = io("https://socket-birthdate-booking.onrender.com", {
         query: {

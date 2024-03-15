@@ -7,57 +7,124 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   TextInput,
+  Modal,
   Platform,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import CalendarPicker from "react-native-calendar-picker";
 import Color from "../../../Utils/Color";
 import Heading from "../../../Components/Heading";
 import { useDispatch } from "react-redux";
 import { performBooking } from "../../../redux/actions/bookingAction";
-import { useUser } from "@clerk/clerk-expo";
 import Toast from "react-native-toast-message";
 import moment from "moment/moment";
-export default function BookingModal({ partyId, showModal }) {
+import Checkbox from "expo-checkbox";
+import { UserType } from "../../../context/UserContext";
+import { useNavigation } from "@react-navigation/native";
+import BookingServiceScreen from "../../BookingScreen/BookingServiceModal";
+
+export default function BookingModal({ partyId, showModal, navigation }) {
+  const [services, setServices] = useState([]);
   const [timeList, setTimeList] = useState([]);
   const [selectedTime, setSelectedTime] = useState();
   const [selectedDate, setSelectedDate] = useState(
     moment().add(2, "days").toDate()
   );
-  const [note, setNote] = useState();
-  const { user } = useUser();
 
+  const [openPopUp, setOpenPopUp] = useState(false);
+  const [note, setNote] = useState();
+  const [selectedServices, setSelectedServices] = useState([]);
+  const { userId, setUserId } = useContext(UserType);
+  const minDateCanBooking = moment().add(2, "days").toDate();
   const dispatch = useDispatch();
 
-  const minDateCanBooking = moment().add(2, "days").toDate();
 
-  const handleSubmit = () => {
-    Toast.show({
-      type: "success",
-      text1: "Please select date and time, Thank you! 👋",
-    });
-    if (!selectedDate || !selectedTime) {
-      return;
+  useEffect(() => {
+    fetchServices();
+  }, []);
+
+  const fetchServices = async () => {
+    try {
+      const response = await fetch(
+        "https://birthday-backend-8sh5.onrender.com/api/v1/services"
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setServices(data);
+      }
+    } catch (error) {
+      console.error("Failed to fetch services:", error);
     }
-    const bookingData = {
-      partyId: partyId,
-      time: selectedTime,
-      date: moment(selectedDate).format("DD-MM-yyyy"),
-      userEmail: user?.primaryEmailAddress.emailAddress,
-      userName: user?.fullName,
-      // note: note,
-    };
-    console.log(bookingData);
-
-    dispatch(performBooking(bookingData));
-    Toast.show({
-      type: "success",
-      text1: "Booking Created Successfully 👋",
-    });
-    showModal();
   };
 
+  const handleSubmit = async () => {
+    try {
+      if (!selectedDate || !selectedTime) {
+        Toast.show({
+          type: "warning",
+          text1: "Please select date and time. 👋",
+        });
+        return;
+      }
+      const total = selectedServices.reduce((totalAmount, serviceId) => {
+        const SelectServicePrice = services.find((service) => {
+          return service._id === serviceId;
+        });
+        return SelectServicePrice
+          ? totalAmount + SelectServicePrice.price
+          : totalAmount;
+        // return totalAmount
+      }, 0);
+
+      // Tạo bookingData từ các giá trị đã có
+      const bookingData = {
+        customerId: userId,
+        partyId: "65e043d9037d564848dc970f",
+        extraService: selectedServices,
+        time: selectedTime,
+        total: total,
+        orderDate: selectedDate,
+        notes: note,
+      };
+      console.log(bookingData);
+
+      // Gửi dữ liệu bookingData lên API để tạo đơn hàng mới
+      const response = await fetch(
+        "https://birthday-backend-8sh5.onrender.com/api/v1/orders/create",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(bookingData),
+        }
+      );
+
+      if (!response.ok) {
+        console.log(response);
+      }
+
+      const responseData = await response.json();
+      console.log("Response from API:", responseData);
+
+      // Nếu tạo đơn hàng thành công, chuyển sang trang thanh toán
+      navigation.navigate("payment", {
+        amount : bookingData.total
+      });
+      Toast.show({
+        type: "success",
+        text1: "Booking Created Successfully. 👋",
+      });
+      showModal(); // Hiển thị modal (nếu cần)
+    } catch (error) {
+      console.error("Error:", error);
+      // Xử lý lỗi khi gọi API
+      Toast.show({
+        type: "error",
+        text1: "Failed to process booking. Please try again later. 👋",
+      });
+      
   useEffect(() => {
     getTime();
   }, []);
@@ -84,6 +151,11 @@ export default function BookingModal({ partyId, showModal }) {
     setTimeList(timeList);
   };
 
+  const handleCloseModal = (selectedServices) => {
+    setSelectedServices(selectedServices);
+    setOpenPopUp(!openPopUp);
+  };
+
   return (
     <KeyboardAvoidingView
       style={{
@@ -102,6 +174,7 @@ export default function BookingModal({ partyId, showModal }) {
         showsHorizontalScrollIndicator={false}
         indicatorStyle={{ backgroundColor: "transparent" }}
       >
+
         <TouchableOpacity
           style={{
             display: "flex",
@@ -129,7 +202,6 @@ export default function BookingModal({ partyId, showModal }) {
             onDateChange={setSelectedDate}
             width={340}
             minDate={minDateCanBooking}
-            todayBackgroundColor={Color.BLACK}
             todayTextStyle={{ color: Color.WHITE }}
             selectedDayColor={Color.PRIMARY}
             selectedDayTextColor={Color.WHITE}
@@ -163,8 +235,28 @@ export default function BookingModal({ partyId, showModal }) {
           ></FlatList>
         </View>
 
-        {/* Note Section */}
+        {/* Service Select Section */}
+        <View style={{ marginTop: 20 }}>
+          <Heading text={"Select Additional Services"} />
+          {/* Danh sách các dịch vụ lẻ */}
+          <TouchableOpacity
+            style={{ marginTop: 15 }}
+            onPress={() => setOpenPopUp(!openPopUp)}
+          >
+            <Text style={styles.confirmBtn}>Add Service</Text>
+          </TouchableOpacity>
+        </View>
+        <Modal animationType="slide" visible={openPopUp}>
+          <BookingServiceScreen
+            services={services}
+            navigation={navigation}
+            openPopUp={() => setOpenPopUp(!openPopUp)}
+            onCloseModal={handleCloseModal}
+            selectBefore={selectedServices}
+          />
+        </Modal>
 
+        {/* Note Section */}
         <View style={{ paddingTop: 20 }}>
           <Heading text={"Any Suggestion Note"} />
           <TextInput

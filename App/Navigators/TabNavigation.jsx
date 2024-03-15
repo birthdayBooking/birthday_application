@@ -55,7 +55,6 @@ export default function TabNavigation() {
 
     </Stack.Navigator>
   );
-
   return (
     <Tab.Navigator
       screenOptions={{

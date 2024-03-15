@@ -3761,6 +3761,11 @@
     "expo-web-browser" "~12.8.0"
     "invariant" "^2.2.4"
 
+"expo-checkbox@~2.7.0":
+  "integrity" "sha512-1wYgoOZ9pBg64PPPULbdD7jEVFX354dpJdUZRmkrO/7ybI668qO4r4+9777CUQ+2JoZEEJBBQzN6UiAl0Uodkg=="
+  "resolved" "https://registry.npmjs.org/expo-checkbox/-/expo-checkbox-2.7.0.tgz"
+  "version" "2.7.0"
+
 "expo-constants@>=14", "expo-constants@~15.4.0", "expo-constants@~15.4.3", "expo-constants@~15.4.5":
   "integrity" "sha512-1pVVjwk733hbbIjtQcvUFCme540v4gFemdNlaxM2UXKbfRCOh2hzgKN5joHMOysoXQe736TTUrRj7UaZI5Yyhg=="
   "resolved" "https://registry.npmjs.org/expo-constants/-/expo-constants-15.4.5.tgz"

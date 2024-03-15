@@ -23,6 +23,7 @@ export default function HomeScreen({ navigation }) {
           body: JSON.stringify({
             username: user?.primaryEmailAddress.emailAddress,
             password: "meokai12345",
+            passwordConfirm: "meokai12345",
             name: user?.fullName,
             email: user?.primaryEmailAddress.emailAddress,
             avatar: user?.profileImageUrl,
@@ -31,6 +32,7 @@ export default function HomeScreen({ navigation }) {
       );
 
       const response = await result.json();
+      console.log(response);
       setUserId(response._id);
     } catch (error) {
       console.log("Error saving user", error);
