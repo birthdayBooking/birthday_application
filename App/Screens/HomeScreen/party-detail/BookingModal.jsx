@@ -31,12 +31,14 @@ export default function BookingModal({ partyId, showModal, navigation }) {
   const [selectedDate, setSelectedDate] = useState(
     moment().add(2, "days").toDate()
   );
+
   const [openPopUp, setOpenPopUp] = useState(false);
   const [note, setNote] = useState();
   const [selectedServices, setSelectedServices] = useState([]);
   const { userId, setUserId } = useContext(UserType);
   const minDateCanBooking = moment().add(2, "days").toDate();
   const dispatch = useDispatch();
+
 
   useEffect(() => {
     fetchServices();
@@ -122,9 +124,7 @@ export default function BookingModal({ partyId, showModal, navigation }) {
         type: "error",
         text1: "Failed to process booking. Please try again later. 👋",
       });
-    }
-  };
-
+      
   useEffect(() => {
     getTime();
   }, []);
@@ -168,7 +168,13 @@ export default function BookingModal({ partyId, showModal, navigation }) {
       }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <ScrollView>
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        keyboardShouldPersistTaps="handled"
+        showsHorizontalScrollIndicator={false}
+        indicatorStyle={{ backgroundColor: "transparent" }}
+      >
+
         <TouchableOpacity
           style={{
             display: "flex",
@@ -196,7 +202,6 @@ export default function BookingModal({ partyId, showModal, navigation }) {
             onDateChange={setSelectedDate}
             width={340}
             minDate={minDateCanBooking}
-            // todayBackgroundColor={Color.BLACK}
             todayTextStyle={{ color: Color.WHITE }}
             selectedDayColor={Color.PRIMARY}
             selectedDayTextColor={Color.WHITE}
@@ -320,5 +325,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     elevation: 2,
     overflow: "hidden",
+    marginBottom: 15,
   },
 });
