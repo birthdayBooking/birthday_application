@@ -9,6 +9,8 @@ import {
   TextInput,
   Modal,
   Platform,
+  Linking,
+  Alert,
 } from "react-native";
 import React, { useEffect, useState, useContext } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -86,9 +88,7 @@ export default function BookingModal({ partyId, showModal, navigation }) {
         orderDate: selectedDate,
         notes: note,
       };
-      console.log(bookingData);
 
-      // Gửi dữ liệu bookingData lên API để tạo đơn hàng mới
       const response = await fetch(
         "https://birthday-backend-8sh5.onrender.com/api/v1/orders/create",
         {
@@ -104,13 +104,19 @@ export default function BookingModal({ partyId, showModal, navigation }) {
         console.log(response);
       }
 
-      const responseData = await response.json();
-      console.log("Response from API:", responseData);
+      const supported = await Linking.canOpenURL(
+        `https://birthday-backend-8sh5.onrender.com/api/v1/payment/create_payment_url?amount=${total}`
+      );
+      if (supported) {
+        await Linking.openURL(
+          `https://birthday-backend-8sh5.onrender.com/api/v1/payment/create_payment_url?amount=${total}`
+        );
+      } else {
+        Alert.alert(
+          `Don't know how to open this URL: ${"https://birthday-backend-8sh5.onrender.com/api/v1/payment/create_payment_url"}`
+        );
+      }
 
-      // Nếu tạo đơn hàng thành công, chuyển sang trang thanh toán
-      navigation.navigate("payment", {
-        amount: bookingData.total,
-      });
       Toast.show({
         type: "success",
         text1: "Booking Created Successfully. 👋",
