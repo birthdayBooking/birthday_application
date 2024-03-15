@@ -107,7 +107,9 @@ export default function BookingModal({ partyId, showModal, navigation }) {
       console.log("Response from API:", responseData);
 
       // Nếu tạo đơn hàng thành công, chuyển sang trang thanh toán
-      navigation.navigate("payment");
+      navigation.navigate("payment", {
+        amount : bookingData.total
+      });
       Toast.show({
         type: "success",
         text1: "Booking Created Successfully. 👋",
