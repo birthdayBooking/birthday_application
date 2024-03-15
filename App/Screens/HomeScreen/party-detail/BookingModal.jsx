@@ -22,11 +22,15 @@ import moment from "moment/moment";
 export default function BookingModal({ partyId, showModal }) {
   const [timeList, setTimeList] = useState([]);
   const [selectedTime, setSelectedTime] = useState();
-  const [selectedDate, setSelectedDate] = useState();
+  const [selectedDate, setSelectedDate] = useState(
+    moment().add(2, "days").toDate()
+  );
   const [note, setNote] = useState();
   const { user } = useUser();
 
   const dispatch = useDispatch();
+
+  const minDateCanBooking = moment().add(2, "days").toDate();
 
   const handleSubmit = () => {
     Toast.show({
@@ -81,10 +85,22 @@ export default function BookingModal({ partyId, showModal }) {
   };
 
   return (
-    <ScrollView>
-      <KeyboardAvoidingView
-        style={{ padding: 20, marginTop: 10, marginBottom: 20, height: "100%" }}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+    <KeyboardAvoidingView
+      style={{
+        paddingVertical: 10,
+        marginHorizontal: 5,
+        marginTop: 10,
+        marginBottom: 20,
+        height: "100%",
+        flex: 1,
+      }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+    >
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        keyboardShouldPersistTaps="handled"
+        showsHorizontalScrollIndicator={false}
+        indicatorStyle={{ backgroundColor: "transparent" }}
       >
         <TouchableOpacity
           style={{
@@ -112,11 +128,12 @@ export default function BookingModal({ partyId, showModal }) {
           <CalendarPicker
             onDateChange={setSelectedDate}
             width={340}
-            minDate={Date.now()}
+            minDate={minDateCanBooking}
             todayBackgroundColor={Color.BLACK}
             todayTextStyle={{ color: Color.WHITE }}
             selectedDayColor={Color.PRIMARY}
             selectedDayTextColor={Color.WHITE}
+            selectedStartDate={selectedDate}
           />
         </View>
 
@@ -166,8 +183,8 @@ export default function BookingModal({ partyId, showModal }) {
         >
           <Text style={styles.confirmBtn}>Confirm & Booking</Text>
         </TouchableOpacity>
-      </KeyboardAvoidingView>
-    </ScrollView>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -204,6 +221,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: "Outfit-Regular",
     borderColor: Color.PRIMARY,
+    padding: 10,
   },
   confirmBtn: {
     textAlign: "center",
@@ -215,5 +233,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     elevation: 2,
     overflow: "hidden",
+    marginBottom: 15,
   },
 });
