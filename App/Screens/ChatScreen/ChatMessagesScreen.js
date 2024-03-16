@@ -27,10 +27,10 @@ import useSendMessage from "../../hooks/useSendMessage";
 import useListenMessages from "../../hooks/useListenMessages";
 import useConversation from "../../zustand/useConversation";
 
-const ChatMessagesScreen = () => {
+const ChatMessagesScreen = ({ navigation }) => {
   const [selectedMessages, setSelectedMessages] = useState([]);
   const [recepientData, setRecepientData] = useState();
-  const navigation = useNavigation();
+
   // const [selectedImage, setSelectedImage] = useState("");
   const { selectedConversation } = useConversation();
 
@@ -76,20 +76,12 @@ const ChatMessagesScreen = () => {
         <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
           <Ionicons
             onPress={() => {
-              navigation.navigate("Chat");
+              navigation.goBack();
             }}
             name="arrow-back"
             size={24}
             color="black"
           />
-
-          {/* {selectedMessages.length > 0 ? (
-            <View>
-              <Text style={{ fontSize: 16, fontWeight: "500" }}>
-                {selectedMessages.length}
-              </Text>
-            </View>
-          ) : ( */}
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Image
               style={{
@@ -98,16 +90,23 @@ const ChatMessagesScreen = () => {
                 borderRadius: 15,
                 resizeMode: "cover",
               }}
-              source={{ uri: selectedConversation?.otherParticipant.avatar }}
+              source={{
+                uri: selectedConversation?.otherParticipant?.avatar
+                  ? selectedConversation?.otherParticipant?.avatar
+                  : selectedConversation?.hostId?.avatar
+                  ? selectedConversation?.hostId?.avatar
+                  : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwRjkqpwHZ52ZpaHWqVgMbjYd3mBtOuMSmLw&usqp=CAU",
+              }}
             />
 
             <Text style={{ marginLeft: 5, fontSize: 15, fontWeight: "bold" }}>
-              {selectedConversation?.otherParticipant.name
-                ? selectedConversation?.otherParticipant.name
-                : selectedConversation?.otherParticipant.lastName}
+              {selectedConversation?.otherParticipant?.name
+                ? selectedConversation?.otherParticipant?.name
+                : selectedConversation?.otherParticipant?.lastName
+                ? selectedConversation?.otherParticipant?.lastName
+                : selectedConversation?.hostId?.lastName}
             </Text>
           </View>
-          {/* )} */}
         </View>
       ),
       headerRight: () =>

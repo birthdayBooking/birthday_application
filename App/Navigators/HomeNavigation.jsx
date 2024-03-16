@@ -6,6 +6,8 @@ import PartyCategorySection from "../Screens/HomeScreen/party-list/PartyCategory
 import PartyDetailSection from "../Screens/HomeScreen/party-detail/PartyDetailSection";
 import PaymentScreen from "../Screens/BookingScreen/PaymentScreen";
 import OrderDetailScreen from "../Screens/BookingScreen/OrderDetailScreen";
+import ChatMessagesScreen from "../Screens/ChatScreen/ChatMessagesScreen";
+
 export default function HomeNavigation() {
   const Stack = createStackNavigator();
   return (
@@ -43,6 +45,13 @@ export default function HomeNavigation() {
         component={OrderDetailScreen}
         options={() => ({
           headerShown: false,
+        })}  
+      />
+      <Stack.Screen
+        name="chat-message"
+        component={ChatMessagesScreen}
+        options={() => ({
+          headerShown: true,
         })}
       />
     </Stack.Navigator>

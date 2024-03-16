@@ -14,7 +14,7 @@ export default function PartyItem({ item }) {
         })
       }
     >
-      <Image source={{ uri: item?.images[0]?.url }} style={styles.image} />
+      <Image source={{ uri: item?.images[0] }} style={styles.image} />
       <View style={styles.infoContainer}>
         <Text style={{ fontSize: 17, fontFamily: "Outfit-Medium" }}>
           {item?.name}
@@ -26,7 +26,7 @@ export default function PartyItem({ item }) {
             color: Color.GRAY,
           }}
         >
-          {item?.contactPerson}
+          {item?.hostId?.lastName}
         </Text>
         <Text
           style={{
@@ -41,7 +41,7 @@ export default function PartyItem({ item }) {
             paddingHorizontal: 7,
           }}
         >
-          {item?.category.name}
+          {item?.category?.name}
         </Text>
       </View>
     </TouchableOpacity>
