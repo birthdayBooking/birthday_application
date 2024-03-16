@@ -6,19 +6,21 @@ import { useNavigation } from '@react-navigation/native';
 
 const HistoryScreen = () => {
   const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const { userId } = useContext(UserType);
   const navigation = useNavigation();
 
   const fetchOrders = async () => {
+    setLoading(true);
     try {
       const response = await fetch(`https://birthday-backend-8sh5.onrender.com/api/v1/orders/getByIdCustomer/${userId}`);
       const data = await response.json();
-      setOrders(data);
+      setOrders(data.data);
       setLoading(false);
     } catch (error) {
       console.error('Lỗi khi lấy lịch sử mua hàng:', error);
       setLoading(false);
+      
     }
   };
 
@@ -27,7 +29,7 @@ const HistoryScreen = () => {
   }, [userId]);
 
   const handleOrderPress = (orderId) => {
-    navigation.navigate('OrderDetail', { orderId });
+    navigation.navigate('orderDetail', { orderId });
   };
 
   const renderOrderItem = ({ item }) => (

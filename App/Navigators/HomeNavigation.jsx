@@ -5,7 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import PartyCategorySection from "../Screens/HomeScreen/party-list/PartyCategorySection";
 import PartyDetailSection from "../Screens/HomeScreen/party-detail/PartyDetailSection";
 import PaymentScreen from "../Screens/BookingScreen/PaymentScreen";
-import HistoryScreen from "../Screens/BookingScreen/HistoryScreen";
+import OrderDetailScreen from "../Screens/BookingScreen/OrderDetailScreen";
 export default function HomeNavigation() {
   const Stack = createStackNavigator();
   return (
@@ -34,6 +34,13 @@ export default function HomeNavigation() {
       <Stack.Screen
         name="payment"
         component={PaymentScreen}
+        options={() => ({
+          headerShown: false,
+        })}
+      />
+      <Stack.Screen
+        name="orderDetail"
+        component={OrderDetailScreen}
         options={() => ({
           headerShown: false,
         })}

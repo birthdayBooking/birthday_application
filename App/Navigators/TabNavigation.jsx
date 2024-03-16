@@ -75,7 +75,7 @@ export default function TabNavigation() {
           ),
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="booking"
         component={BookingScreen}
         options={{
@@ -88,7 +88,7 @@ export default function TabNavigation() {
             <FontAwesome6 name="calendar-days" size={size} color={color} />
           ),
         }}
-      />
+      /> */}
       <Tab.Screen
         name="profile"
         component={ProfileScreen}

@@ -86,7 +86,6 @@ export default function BookingModal({ partyId, showModal, navigation }) {
         orderDate: selectedDate,
         notes: note,
       };
-      console.log(bookingData);
 
       // Gửi dữ liệu bookingData lên API để tạo đơn hàng mới
       const response = await fetch(
@@ -105,7 +104,6 @@ export default function BookingModal({ partyId, showModal, navigation }) {
       }
 
       const responseData = await response.json();
-      console.log("Response from API:", responseData);
 
       // Nếu tạo đơn hàng thành công, chuyển sang trang thanh toán
       navigation.navigate("payment", {

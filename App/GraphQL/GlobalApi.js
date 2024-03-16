@@ -29,7 +29,6 @@ const createBookingParty = async (bookingData) => {
     GRAPHQL_BASE_URL,
     bookingPartyQuery(bookingData)
   );
-  console.log("result", result);
   return result;
 };
 
