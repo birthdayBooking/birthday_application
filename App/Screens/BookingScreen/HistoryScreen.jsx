@@ -1,9 +1,17 @@
 // HistoryScreen.js
-import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, FlatList, ActivityIndicator, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState, useEffect, useContext } from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  ActivityIndicator,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
 import { UserType } from "../../context/UserContext";
-import { useNavigation } from '@react-navigation/native';
-
+import { useNavigation } from "@react-navigation/native";
+import { formatMoney } from "../../Utils/Common";
+import moment from "moment";
 const HistoryScreen = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -13,14 +21,15 @@ const HistoryScreen = () => {
   const fetchOrders = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`https://birthday-backend-8sh5.onrender.com/api/v1/orders/getByIdCustomer/${userId}`);
+      const response = await fetch(
+        `https://birthday-backend-8sh5.onrender.com/api/v1/orders/getByIdCustomer/${userId}`
+      );
       const data = await response.json();
       setOrders(data.data);
       setLoading(false);
     } catch (error) {
-      console.error('Lỗi khi lấy lịch sử mua hàng:', error);
+      console.error("Lỗi khi lấy lịch sử mua hàng:", error);
       setLoading(false);
-      
     }
   };
 
@@ -29,14 +38,21 @@ const HistoryScreen = () => {
   }, [userId]);
 
   const handleOrderPress = (orderId) => {
-    navigation.navigate('orderDetail', { orderId });
+    navigation.navigate("OrderDetailScreen", { orderId });
   };
 
   const renderOrderItem = ({ item }) => (
-    <TouchableOpacity onPress={() => handleOrderPress(item._id)} style={styles.orderItem}>
+    <TouchableOpacity
+      onPress={() => handleOrderPress(item._id)}
+      style={styles.orderItem}
+    >
       <Text style={styles.orderText}>Mã đơn hàng: {item._id}</Text>
-      <Text style={styles.orderText}>Ngày đặt hàng: {item.orderDate}</Text>
-      <Text style={styles.orderText}>Tổng số tiền: ${item.total}</Text>
+      <Text style={styles.orderText}>
+        Ngày Tổ Chức: {moment(item?.orderDate).format("DD/MM/YYYY")}
+      </Text>
+      <Text style={styles.orderText}>
+        Tổng số tiền: {formatMoney(item?.total)}
+      </Text>
       <Text style={styles.orderText}>Trạng thái: {item.status}</Text>
     </TouchableOpacity>
   );
@@ -60,16 +76,16 @@ const HistoryScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   flatList: {
-    width: '100%',
+    width: "100%",
   },
   orderItem: {
     padding: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    borderBottomColor: "#ccc",
   },
   orderText: {
     fontSize: 16,

@@ -11,13 +11,13 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native";
 import HistoryScreen from "../Screens/BookingScreen/HistoryScreen";
+import OrderDetailScreen from "../Screens/BookingScreen/OrderDetailScreen";
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 export default function TabNavigation() {
   const navigation = useNavigation();
   const CustomButton = (props) => {
-
     const { navigateName, screen } = props;
 
     const handlePress = () => {
@@ -51,7 +51,27 @@ export default function TabNavigation() {
           },
         }}
       />
-
+    </Stack.Navigator>
+  );
+  const BookingStack = () => (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Booking"
+        component={HistoryScreen}
+        options={() => ({
+          headerShown: true,
+        })}
+      />
+      <Stack.Screen
+        name="OrderDetailScreen"
+        component={OrderDetailScreen}
+        options={{
+          tabBarStyle: {
+            display: "none",
+          },
+          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
+        }}
+      />
     </Stack.Navigator>
   );
   return (
@@ -75,20 +95,6 @@ export default function TabNavigation() {
           ),
         }}
       />
-      {/* <Tab.Screen
-        name="booking"
-        component={BookingScreen}
-        options={{
-          tabBarLabel: ({ color }) => (
-            <Text style={{ color: color, fontSize: 12, marginTop: -7 }}>
-              Booking
-            </Text>
-          ),
-          tabBarIcon: ({ color, size }) => (
-            <FontAwesome6 name="calendar-days" size={size} color={color} />
-          ),
-        }}
-      /> */}
       <Tab.Screen
         name="profile"
         component={ProfileScreen}
@@ -103,9 +109,9 @@ export default function TabNavigation() {
           ),
         }}
       />
-          <Tab.Screen
-        name="history"
-        component={HistoryScreen}
+      <Tab.Screen
+        name="historyRoot"
+        component={BookingStack}
         options={{
           tabBarLabel: ({ color }) => (
             <Text style={{ color: color, fontSize: 12, marginTop: -7 }}>
@@ -114,6 +120,13 @@ export default function TabNavigation() {
           ),
           tabBarIcon: ({ color, size }) => (
             <FontAwesome name="user-o" size={size} color={color} />
+          ),
+          tabBarButton: (props) => (
+            <CustomButton
+              {...props}
+              navigateName="historyRoot"
+              screen="Booking"
+            />
           ),
         }}
       />
@@ -139,7 +152,6 @@ export default function TabNavigation() {
           tabBarStyle: {
             display: "none",
           },
-
         }}
       />
     </Tab.Navigator>
