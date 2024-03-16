@@ -104,7 +104,7 @@ export default function BookingModal({ partyId, showModal, navigation }) {
       if (!response.ok) {
         console.log(response);
       }
-
+      
       const supported = await Linking.canOpenURL(
         `https://birthday-backend-8sh5.onrender.com/api/v1/payment/create_payment_url?amount=${totalForBooking}`
       );

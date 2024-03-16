@@ -5,6 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import PartyCategorySection from "../Screens/HomeScreen/party-list/PartyCategorySection";
 import PartyDetailSection from "../Screens/HomeScreen/party-detail/PartyDetailSection";
 import PaymentScreen from "../Screens/BookingScreen/PaymentScreen";
+import OrderDetailScreen from "../Screens/BookingScreen/OrderDetailScreen";
 import ChatMessagesScreen from "../Screens/ChatScreen/ChatMessagesScreen";
 
 export default function HomeNavigation() {
@@ -38,6 +39,13 @@ export default function HomeNavigation() {
         options={() => ({
           headerShown: false,
         })}
+      />
+      <Stack.Screen
+        name="orderDetail"
+        component={OrderDetailScreen}
+        options={() => ({
+          headerShown: false,
+        })}  
       />
       <Stack.Screen
         name="chat-message"

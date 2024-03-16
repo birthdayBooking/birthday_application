@@ -20,16 +20,7 @@ export default function SliderSection() {
     dispatch(fetchSliderData());
   }, [dispatch]);
 
-  //import Redux
-  // const fetchSliderData = async () => {
-  //   try {
-  //     const result = await GlobalApi.getSlider();
-  //     console.log("result", result);
-  //     return result;
-  //   } catch (error) {
-  //     console.error("Error fetching slider data:", error);
-  //   }
-  // };
+
   if (!sliders) {
     return <ActivityIndicator size="large" color="#0000ff" />;
   }

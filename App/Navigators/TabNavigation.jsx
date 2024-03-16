@@ -10,8 +10,7 @@ import ChatMessagesScreen from "../Screens/ChatScreen/ChatMessagesScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native";
-
-
+import HistoryScreen from "../Screens/BookingScreen/HistoryScreen";
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
@@ -76,7 +75,7 @@ export default function TabNavigation() {
           ),
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="booking"
         component={BookingScreen}
         options={{
@@ -89,7 +88,7 @@ export default function TabNavigation() {
             <FontAwesome6 name="calendar-days" size={size} color={color} />
           ),
         }}
-      />
+      /> */}
       <Tab.Screen
         name="profile"
         component={ProfileScreen}
@@ -97,6 +96,20 @@ export default function TabNavigation() {
           tabBarLabel: ({ color }) => (
             <Text style={{ color: color, fontSize: 12, marginTop: -7 }}>
               Profile
+            </Text>
+          ),
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome name="user-o" size={size} color={color} />
+          ),
+        }}
+      />
+          <Tab.Screen
+        name="history"
+        component={HistoryScreen}
+        options={{
+          tabBarLabel: ({ color }) => (
+            <Text style={{ color: color, fontSize: 12, marginTop: -7 }}>
+              history
             </Text>
           ),
           tabBarIcon: ({ color, size }) => (
