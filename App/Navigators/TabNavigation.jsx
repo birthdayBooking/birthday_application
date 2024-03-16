@@ -56,14 +56,14 @@ export default function TabNavigation() {
   const BookingStack = () => (
     <Stack.Navigator>
       <Stack.Screen
-        name="Booking"
+        name="Lịch sử đặt hàng"
         component={HistoryScreen}
         options={() => ({
           headerShown: true,
         })}
       />
       <Stack.Screen
-        name="OrderDetailScreen"
+        name="Chi tiết đơn hàng"
         component={OrderDetailScreen}
         options={{
           tabBarStyle: {
@@ -87,7 +87,7 @@ export default function TabNavigation() {
         options={{
           tabBarLabel: ({ color }) => (
             <Text style={{ color: color, fontSize: 12, marginTop: -7 }}>
-              Home
+              Trang Chủ
             </Text>
           ),
           tabBarIcon: ({ color, size }) => (
@@ -101,7 +101,7 @@ export default function TabNavigation() {
         options={{
           tabBarLabel: ({ color }) => (
             <Text style={{ color: color, fontSize: 12, marginTop: -7 }}>
-              Profile
+              Cá Nhân
             </Text>
           ),
           tabBarIcon: ({ color, size }) => (
@@ -115,7 +115,7 @@ export default function TabNavigation() {
         options={{
           tabBarLabel: ({ color }) => (
             <Text style={{ color: color, fontSize: 12, marginTop: -7 }}>
-              history
+              Lịch sử
             </Text>
           ),
           tabBarIcon: ({ color, size }) => (

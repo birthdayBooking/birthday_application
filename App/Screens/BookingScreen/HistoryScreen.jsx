@@ -12,6 +12,7 @@ import { UserType } from "../../context/UserContext";
 import { useNavigation } from "@react-navigation/native";
 import { formatMoney } from "../../Utils/Common";
 import moment from "moment";
+import Color from "../../Utils/Color";
 const HistoryScreen = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -38,7 +39,7 @@ const HistoryScreen = () => {
   }, [userId]);
 
   const handleOrderPress = (orderId) => {
-    navigation.navigate("OrderDetailScreen", { orderId });
+    navigation.navigate("Chi tiết đơn hàng", { orderId });
   };
 
   const renderOrderItem = ({ item }) => (
@@ -67,6 +68,7 @@ const HistoryScreen = () => {
           renderItem={renderOrderItem}
           keyExtractor={(item) => item._id.toString()}
           style={styles.flatList}
+          contentContainerStyle={{padding: 10}}
         />
       )}
     </View>
@@ -83,13 +85,42 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   orderItem: {
+    marginVertical: 3,
     padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
+    borderBottomWidth: 2,
+    borderBottomColor: Color.WHITE,
+    borderRadius: 5,
+    backgroundColor: Color.PRIMARY,
+    shadowColor: Color.BLACK,
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+    elevation: 2,
   },
   orderText: {
     fontSize: 16,
+    color: Color.LIGHT,
   },
+  buttonContainer: {
+    marginVertical: 2,
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+    borderRadius: 5,
+    backgroundColor: "#fff",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+    elevation: 2,
+  },
+  
 });
 
 export default HistoryScreen;

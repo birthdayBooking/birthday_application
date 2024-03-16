@@ -9,4 +9,6 @@ export default {
   GREEN_LIGHT: "#86A789",
   RED: "#A94438",
   RED_LIGHT: "#D24545",
+  PERSIAN_PINK: "#F283B6",
+
 };
