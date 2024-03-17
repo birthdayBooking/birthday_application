@@ -9,6 +9,9 @@ import {
 
 import Checkbox from "expo-checkbox";
 import { Ionicons } from "@expo/vector-icons";
+import Color from "../../Utils/Color";
+import Heading from "../../Components/Heading";
+import { formatMoney } from "../../Utils/Common";
 export default function BookingServiceScreen({
   services,
   submitService,
@@ -20,7 +23,6 @@ export default function BookingServiceScreen({
   // const [services, setServices] = useState([]);
   const [selectedServices, setSelectedServices] = useState([]);
   const [isChecked, setChecked] = useState(false);
-
   // Set navigation options
   useEffect(() => {
     if (selectBefore.length > 0) {
@@ -40,8 +42,6 @@ export default function BookingServiceScreen({
 
   const handleSubmitBooking = async () => {
     try {
-      // Gửi selectedServices lên  để đặt hàng
-
       onCloseModal(selectedServices);
     } catch (err) {
       console.error("Error while submitting booking:", err.message);
@@ -61,23 +61,18 @@ export default function BookingServiceScreen({
         onPress={() => openPopUp()}
       >
         <Ionicons name="arrow-back-outline" size={24} color="black" />
-        <Text
-          style={{
-            fontSize: 25,
-            fontFamily: "Outfit-Medium",
-          }}
-        >
-          Services
-        </Text>
+        <Heading text="Select Services" />
       </TouchableOpacity>
       <FlatList
+        style={{ marginTop: 20 }}
         data={services}
         renderItem={({ item }) => (
           <TouchableOpacity onPress={() => toggleServiceSelection(item.id)}>
             <View style={styles.serviceItem}>
               <Text style={styles.serviceName}>{item.name}</Text>
-              <Text style={styles.servicePrice}>{item.price}</Text>
+              <Text style={styles.servicePrice}>{formatMoney(item.price)}</Text>
               <Checkbox
+                color={Color.PRIMARY}
                 value={selectedServices.includes(item.id)}
                 onValueChange={() => toggleServiceSelection(item.id)}
               />
@@ -86,10 +81,7 @@ export default function BookingServiceScreen({
         )}
         keyExtractor={(item) => item.id.toString()}
       />
-      <TouchableOpacity
-        style={styles.submitButton}
-        onPress={handleSubmitBooking}
-      >
+      <TouchableOpacity style={styles.confirmBtn} onPress={handleSubmitBooking}>
         <Text style={styles.submitButtonText}>Submit Booking</Text>
       </TouchableOpacity>
     </View>
@@ -100,30 +92,46 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    marginTop: 20,
   },
   serviceItem: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     marginBottom: 10,
+
+    // Div center
   },
   serviceName: {
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: "bold",
   },
   servicePrice: {
-    fontSize: 16,
+    fontSize: 20,
   },
   submitButton: {
-    backgroundColor: "#007bff",
+    backgroundColor: Color.PRIMARY,
     paddingVertical: 15,
     borderRadius: 5,
     alignItems: "center",
     marginTop: 20,
   },
   submitButtonText: {
-    color: "#fff",
+    color: Color.WHITE,
+    textAlign: "center",
     fontSize: 16,
     fontWeight: "bold",
+  },
+  confirmBtn: {
+    textAlign: "center",
+    fontFamily: "Outfit-Medium",
+    fontSize: 17,
+    backgroundColor: Color.PRIMARY,
+    color: Color.WHITE,
+    padding: 13,
+    borderRadius: 20,
+    elevation: 2,
+    overflow: "hidden",
+    marginBottom: 15,
   },
 });

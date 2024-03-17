@@ -18,12 +18,9 @@ import CalendarPicker from "react-native-calendar-picker";
 import Color from "../../../Utils/Color";
 import Heading from "../../../Components/Heading";
 import { useDispatch } from "react-redux";
-import { performBooking } from "../../../redux/actions/bookingAction";
 import Toast from "react-native-toast-message";
 import moment from "moment/moment";
-import Checkbox from "expo-checkbox";
 import { UserType } from "../../../context/UserContext";
-import { useNavigation } from "@react-navigation/native";
 import BookingServiceScreen from "../../BookingScreen/BookingServiceModal";
 
 export default function BookingModal({ partyId, showModal, navigation }) {
