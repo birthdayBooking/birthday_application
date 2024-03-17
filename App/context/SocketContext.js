@@ -16,7 +16,6 @@ export const SocketContextProvider = ({ children }) => {
   const { userId, setUserId } = useContext(UserType);
 
   useEffect(() => {
-    console.log("online", userId);
     if (userId) {
       const socket = io("https://socket-birthdate-booking.onrender.com", {
         query: {
@@ -29,7 +28,6 @@ export const SocketContextProvider = ({ children }) => {
       // socket.on() is used to listen to the events. can be used both on client and server side
       socket.on("getOnlineUsers", (users) => {
         setOnlineUsers(users);
-        console.log("online user ", users);
       });
 
       return () => socket.close();

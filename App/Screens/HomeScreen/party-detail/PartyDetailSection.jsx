@@ -58,6 +58,12 @@ export default function PartyDetailSection({ navigation }) {
               <Text style={{ fontFamily: "Outfit-Bold", fontSize: 25 }}>
                 {party?.name}
               </Text>
+              <Text style={{ fontFamily: "Outfit-Bold", fontSize: 25 }}>
+                {party?.price.toLocaleString("it-IT", {
+                  style: "currency",
+                  currency: "VND",
+                })}
+              </Text>
               <View style={styles.subContainer}>
                 <Text
                   style={{

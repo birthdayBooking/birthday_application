@@ -10,15 +10,14 @@ import ChatMessagesScreen from "../Screens/ChatScreen/ChatMessagesScreen";
 import { createStackNavigator } from "@react-navigation/stack";
 import { useNavigation } from "@react-navigation/native";
 import { TouchableOpacity } from "react-native";
-
-
+import HistoryScreen from "../Screens/BookingScreen/HistoryScreen";
+import OrderDetailScreen from "../Screens/BookingScreen/OrderDetailScreen";
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 export default function TabNavigation() {
   const navigation = useNavigation();
   const CustomButton = (props) => {
-
     const { navigateName, screen } = props;
 
     const handlePress = () => {
@@ -52,7 +51,27 @@ export default function TabNavigation() {
           },
         }}
       />
-
+    </Stack.Navigator>
+  );
+  const BookingStack = () => (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Lịch sử đặt hàng"
+        component={HistoryScreen}
+        options={() => ({
+          headerShown: true,
+        })}
+      />
+      <Stack.Screen
+        name="Chi tiết đơn hàng"
+        component={OrderDetailScreen}
+        options={{
+          tabBarStyle: {
+            display: "none",
+          },
+          headerLeft: () => <BackButton onPress={() => navigation.goBack()} />,
+        }}
+      />
     </Stack.Navigator>
   );
   return (
@@ -68,25 +87,11 @@ export default function TabNavigation() {
         options={{
           tabBarLabel: ({ color }) => (
             <Text style={{ color: color, fontSize: 12, marginTop: -7 }}>
-              Home
+              Trang Chủ
             </Text>
           ),
           tabBarIcon: ({ color, size }) => (
             <FontAwesome name="home" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="booking"
-        component={BookingScreen}
-        options={{
-          tabBarLabel: ({ color }) => (
-            <Text style={{ color: color, fontSize: 12, marginTop: -7 }}>
-              Booking
-            </Text>
-          ),
-          tabBarIcon: ({ color, size }) => (
-            <FontAwesome6 name="calendar-days" size={size} color={color} />
           ),
         }}
       />
@@ -96,11 +101,32 @@ export default function TabNavigation() {
         options={{
           tabBarLabel: ({ color }) => (
             <Text style={{ color: color, fontSize: 12, marginTop: -7 }}>
-              Profile
+              Cá Nhân
             </Text>
           ),
           tabBarIcon: ({ color, size }) => (
             <FontAwesome name="user-o" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="historyRoot"
+        component={BookingStack}
+        options={{
+          tabBarLabel: ({ color }) => (
+            <Text style={{ color: color, fontSize: 12, marginTop: -7 }}>
+              Lịch sử
+            </Text>
+          ),
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome name="user-o" size={size} color={color} />
+          ),
+          tabBarButton: (props) => (
+            <CustomButton
+              {...props}
+              navigateName="historyRoot"
+              screen="Booking"
+            />
           ),
         }}
       />
@@ -126,7 +152,6 @@ export default function TabNavigation() {
           tabBarStyle: {
             display: "none",
           },
-
         }}
       />
     </Tab.Navigator>
