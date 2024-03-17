@@ -8,7 +8,7 @@ export default function PartyAboutMeSection({ party }) {
 
   return (
     <View>
-      <Heading text={"About Party"} />
+      <Heading text={"Mô tả buổi tiệc"} />
       <Text
         style={{
           fontFamily: "Outfit-Regular",

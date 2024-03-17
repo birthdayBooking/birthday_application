@@ -24,22 +24,22 @@ export default function ProfileScreen() {
   const profileMenu = [
     {
       id: 1,
-      name: "Home",
+      name: "Trang Chủ",
       icon: "home",
     },
     {
       id: 2,
-      name: "My Booking",
+      name: "Lịch sử",
       icon: "bookmark-sharp",
     },
     {
       id: 3,
-      name: "Contact Us",
+      name: "Liên hệ với chúng tôi",
       icon: "mail",
     },
     {
       id: 4,
-      name: "Logout",
+      name: "Đăng xuất",
       icon: "log-out",
     },
   ];
@@ -56,7 +56,7 @@ export default function ProfileScreen() {
             color: Color.WHITE,
           }}
         >
-          Profile
+          Cá nhân
         </Text>
         <View
           style={{
@@ -103,11 +103,11 @@ export default function ProfileScreen() {
                 if (index === 3) {
                   signOut();
                 } else if (index === 1) {
-                  navigation.navigate("booking");
+                  navigation.navigate("historyRoot");
                 } else if (index === 2) {
                   onMessageBtnClick();
                 } else {
-                  navigation.navigate(item.name.toLowerCase());
+                  navigation.navigate("home-main");
                 }
               }}
               style={{

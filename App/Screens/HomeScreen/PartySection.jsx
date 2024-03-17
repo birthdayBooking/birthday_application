@@ -33,7 +33,7 @@ export default function PartySection() {
 
   return (
     <View style={{ marginTop: 15 }}>
-      <Heading text={"Popular Party"} isViewAll={true} />
+      <Heading text={"Các buổi tiệc"} isViewAll={true} />
       <FlatList
         data={parties}
         horizontal={true}

@@ -139,7 +139,7 @@ export default function PartyDetailSection({ navigation }) {
                     fontSize: 18,
                   }}
                 >
-                  Message
+                  Tin nhắn
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -154,7 +154,7 @@ export default function PartyDetailSection({ navigation }) {
                     fontSize: 18,
                   }}
                 >
-                  Booking
+                  Đặt Ngay
                 </Text>
               </TouchableOpacity>
             </View>

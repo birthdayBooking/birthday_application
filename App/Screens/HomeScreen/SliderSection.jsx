@@ -27,7 +27,7 @@ export default function SliderSection() {
 
   return (
     <View>
-      <Heading text={"Offers for you"} />
+      <Heading text={"Gợi ý cho bạn"} />
       <FlatList
         data={sliders.sliders}
         horizontal={true}

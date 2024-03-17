@@ -41,9 +41,9 @@ export default function LoginScreen() {
             textAlign: "center",
           }}
         >
-          Let's booking{" "}
+          Bắt đầu đặt tiệc{" "}
           <Text style={{ fontWeight: "bold" }}>
-            a birthday party for your kid
+            Một bữa tiệc sinh nhật cho trẻ em
           </Text>
         </Text>
         <Text
@@ -54,13 +54,13 @@ export default function LoginScreen() {
             marginTop: 20,
           }}
         >
-          Best App to booking birthday for kid
+          Ứng dụng tốt nhất để bạn đặt một buổi tiệc cho con em của bạn
         </Text>
         <TouchableOpacity style={styles.button} onPress={onPress}>
           <Text
             style={{ textAlign: "center", fontSize: 17, color: Color.PRIMARY }}
           >
-            Let's Get Started
+            Bắt đầu
           </Text>
         </TouchableOpacity>
       </View>

@@ -26,7 +26,7 @@ export default function HeaderSection() {
           <View style={styles.profileContainer}>
             <Image source={{ uri: user?.imageUrl }} style={styles.userImg} />
             <View>
-              <Text style={{ color: Color.WHITE }}>Welcome,</Text>
+              <Text style={{ color: Color.WHITE }}>Chào mừng,</Text>
               <Text
                 style={{
                   color: Color.WHITE,
@@ -43,7 +43,7 @@ export default function HeaderSection() {
         {/* Searchbar Section*/}
         <View style={styles.searchBarContainer}>
           <TextInput
-            placeholder="Search the name restaurant"
+            placeholder="Tìm kiếm tên buổi tiệc"
             style={styles.textInput}
           />
           <AntDesign

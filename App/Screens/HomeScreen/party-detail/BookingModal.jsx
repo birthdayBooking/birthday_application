@@ -190,11 +190,11 @@ export default function BookingModal({ partyId, showModal, navigation }) {
               fontFamily: "Outfit-Medium",
             }}
           >
-            Booking
+            Quay lại
           </Text>
         </TouchableOpacity>
         <View style={{ marginTop: 20 }}>
-          <Heading text="Select date you want" />
+          <Heading text="Thời gian diễn ra" />
         </View>
         <View style={styles.calendarContainer}>
           <CalendarPicker
@@ -210,7 +210,7 @@ export default function BookingModal({ partyId, showModal, navigation }) {
 
         {/* Time Select Section */}
         <View style={{ marginTop: 20 }}>
-          <Heading text={"Slect Time Slot"}></Heading>
+          <Heading text={"Giờ diễn ra"}></Heading>
           <FlatList
             data={timeList}
             horizontal={true}
@@ -236,13 +236,13 @@ export default function BookingModal({ partyId, showModal, navigation }) {
 
         {/* Service Select Section */}
         <View style={{ marginTop: 20 }}>
-          <Heading text={"Select Additional Services"} />
+          <Heading text={"Chọn thêm dịch vụ lẻ"} />
           {/* Danh sách các dịch vụ lẻ */}
           <TouchableOpacity
             style={{ marginTop: 15 }}
             onPress={() => setOpenPopUp(!openPopUp)}
           >
-            <Text style={styles.confirmBtn}>Add Service</Text>
+            <Text style={styles.confirmBtn}>Thêm dịch vụ lẻ</Text>
           </TouchableOpacity>
         </View>
         <Modal animationType="slide" visible={openPopUp}>
@@ -257,7 +257,7 @@ export default function BookingModal({ partyId, showModal, navigation }) {
 
         {/* Note Section */}
         <View style={{ paddingTop: 20 }}>
-          <Heading text={"Any Suggestion Note"} />
+          <Heading text={"Câu hỏi hoặc lời nhắn cho chúng tôi"} />
           <TextInput
             placeholder="Note"
             numberOfLines={4}
@@ -272,7 +272,7 @@ export default function BookingModal({ partyId, showModal, navigation }) {
           style={{ marginTop: 15 }}
           onPress={() => handleSubmit()}
         >
-          <Text style={styles.confirmBtn}>Confirm & Booking</Text>
+          <Text style={styles.confirmBtn}>Hoàn tất và đặt tiệc</Text>
         </TouchableOpacity>
       </ScrollView>
     </KeyboardAvoidingView>

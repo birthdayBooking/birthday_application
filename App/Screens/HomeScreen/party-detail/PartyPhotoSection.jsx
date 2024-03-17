@@ -6,7 +6,7 @@ import { FlatList } from "react-native-gesture-handler";
 export default function PartyPhotoSection({ party }) {
   return (
     <View>
-      <Heading text={"Photos"} />
+      <Heading text={"Hình ảnh"} />
       <FlatList
         data={party?.images}
         numColumns={2}
