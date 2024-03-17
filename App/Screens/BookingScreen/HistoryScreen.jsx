@@ -13,6 +13,13 @@ import { useNavigation } from "@react-navigation/native";
 import { formatMoney } from "../../Utils/Common";
 import moment from "moment";
 import Color from "../../Utils/Color";
+import Fonts from "../../Utils/Font";
+import {
+  AntDesign,
+  FontAwesome5,
+  Ionicons,
+  MaterialIcons,
+} from "@expo/vector-icons";
 const HistoryScreen = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -47,14 +54,55 @@ const HistoryScreen = () => {
       onPress={() => handleOrderPress(item._id)}
       style={styles.orderItem}
     >
-      <Text style={styles.orderText}>Mã đơn hàng: {item._id}</Text>
-      <Text style={styles.orderText}>
-        Ngày Tổ Chức: {moment(item?.orderDate).format("DD/MM/YYYY")}
-      </Text>
-      <Text style={styles.orderText}>
-        Tổng số tiền: {formatMoney(item?.total)}
-      </Text>
-      <Text style={styles.orderText}>Trạng thái: {item.status}</Text>
+      <View style={styles.subContainer}>
+        <Text style={styles.orderText}>Mã đơn: {item?._id}</Text>
+        <View style={styles.flexRow}>
+          <Text style={styles.orderText}>
+            <AntDesign name="calendar" size={16} color={Color.PRIMARY} />{" "}
+            {moment(item?.orderDate).format("DD/MM/YYYY")} lúc{" "}
+            {moment(item?.orderDate).format("HH:mm")}
+          </Text>
+          <Text style={styles.orderText}>
+            <FontAwesome5
+              name="money-bill-alt"
+              size={16}
+              color={Color.PRIMARY}
+            />{" "}
+            {formatMoney(item?.total)}
+          </Text>
+        </View>
+
+        <Text
+          style={[
+            {
+              padding: 2,
+              borderRadius: 5,
+              fontSize: 14,
+              overflow: "hidden",
+              textAlign: "center",
+            },
+            item?.status === "complete"
+              ? {
+                  backgroundColor: Color.GREEN,
+                  color: Color.LIGHT,
+                  width: "20%",
+                }
+              : item?.status === "pending"
+              ? {
+                  backgroundColor: Color.RED,
+                  color: Color.LIGHT,
+                  width: "20%",
+                }
+              : {
+                  color: Color.PRIMARY,
+                  backgroundColor: Color.PRIMARY_LIGHT,
+                  width: "20%",
+                },
+          ]}
+        >
+          {item?.status}
+        </Text>
+      </View>
     </TouchableOpacity>
   );
 
@@ -68,7 +116,7 @@ const HistoryScreen = () => {
           renderItem={renderOrderItem}
           keyExtractor={(item) => item._id.toString()}
           style={styles.flatList}
-          contentContainerStyle={{padding: 10}}
+          contentContainerStyle={{ padding: 10 }}
         />
       )}
     </View>
@@ -77,50 +125,46 @@ const HistoryScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    padding: 10,
+    backgroundColor: Color.WHITE,
+    borderRadius: 15,
+    marginBottom: 15,
+    display: "flex",
+    flexDirection: "row",
+    gap: 10,
+  },
+  subContainer: {
+    display: "flex",
+    gap: 8,
   },
   flatList: {
     width: "100%",
   },
   orderItem: {
-    marginVertical: 3,
+    marginVertical: 5,
     padding: 10,
     borderBottomWidth: 2,
-    borderBottomColor: Color.WHITE,
-    borderRadius: 5,
-    backgroundColor: Color.PRIMARY,
+    borderBottomColor: Color.PRIMARY,
+    backgroundColor: Color.WHITE,
     shadowColor: Color.BLACK,
     shadowOffset: {
-      width: 0,
+      width: 1,
       height: 1,
     },
     shadowOpacity: 0.2,
-    shadowRadius: 1.41,
-    elevation: 2,
+    shadowRadius: 1.42,
+    borderRadius: 10,
   },
   orderText: {
-    fontSize: 16,
-    color: Color.LIGHT,
+    fontFamily: Fonts.REGULAR,
+    fontSize: 15,
+    color: Color.PRIMARY,
   },
-  buttonContainer: {
-    marginVertical: 2,
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
-    borderRadius: 5,
-    backgroundColor: "#fff",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
-    elevation: 2,
+  flexRow: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 50,
   },
-  
 });
 
 export default HistoryScreen;
