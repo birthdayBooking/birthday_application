@@ -18,17 +18,28 @@ export default function PartyCategorySection({ navigation }) {
   const dispatch = useDispatch();
   const [showUI, setShowUI] = useState(false);
   const param = useRoute().params;
-  const parties = useSelector((state) => state.party.partiesCategory);
+  const [partyByCategories, setPartyByCategories] = useState([]);
 
   useEffect(() => {
-    dispatch(fetchPartyByCategoryNameData(param?.categoryName));
-
-    const timer = setTimeout(() => {
-      setShowUI(true);
-    }, 450);
-    return () => clearTimeout(timer);
+    fetchPartyCategoryApi();
   }, []);
 
+  const fetchPartyCategoryApi = async () => {
+    // const url = `https://birthday-backend-8sh5.onrender.com/api/v1/parties/${param?.categoryName}`
+    // console.log(url)
+    try {
+      const response = await fetch(
+        `https://birthday-backend-8sh5.onrender.com/api/v1/parties/${param.categoryName}`
+      );
+      const result = await response.json();
+      setPartyByCategories(result);
+      setShowUI(true)
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+ 
   if (!showUI) {
     return (
       <ActivityIndicator
@@ -41,11 +52,11 @@ export default function PartyCategorySection({ navigation }) {
 
   return (
     <View style={{ padding: 20, paddingTop: 30 }}>
-      <PageHeading title={param?.categoryName} />
-      {parties?.parties?.length > 0 ? (
+      <PageHeading title={param?.categoryName + " Parties"} />
+      {partyByCategories.length > 0 ? (
         <FlatList
           style={{ marginTop: 15 }}
-          data={parties?.parties}
+          data={partyByCategories}
           renderItem={({ item, index }) => (
             <PartyCategoryItem navigation={navigation} party={item} />
           )}
