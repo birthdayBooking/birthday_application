@@ -1,9 +1,10 @@
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import Color from "../../../Utils/Color";
 import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 export default function PartyCategoryItem({ party, navigation, booking }) {
+  
   return (
     <TouchableOpacity
       style={styles.container}
@@ -13,7 +14,7 @@ export default function PartyCategoryItem({ party, navigation, booking }) {
         })
       }
     >
-      <Image source={{ uri: party?.images[0]?.url }} style={styles.image} />
+      <Image source={{ uri: party.images[0] }} style={styles.image} />
 
       <View style={styles.subContainer}>
         <Text
