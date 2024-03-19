@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { fetchAllBookingByEmail } from "../../redux/actions/bookingAction";
 import { useUser } from "@clerk/clerk-expo";
 import PartyCategoryItem from "../HomeScreen/party-list/PartyCategoryItem";
+
 export default function BookingScreen() {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
