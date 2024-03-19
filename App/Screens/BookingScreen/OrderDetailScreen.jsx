@@ -22,7 +22,7 @@ const OrderDetailScreen = ({ route }) => {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const { user } = useUser()
+  const { user } = useUser();
   const param = useRoute().params;
   const navigation = useNavigation();
 
@@ -38,7 +38,7 @@ const OrderDetailScreen = ({ route }) => {
       const data = await response.json();
       setOrder(data);
       setServices(data?.data?.extraService);
-      console.log(order?.data?.reviews)
+      console.log(data);
       setLoading(false);
     } catch (error) {
       console.error("Lỗi khi lấy chi tiết đơn hàng:", error);
@@ -64,7 +64,12 @@ const OrderDetailScreen = ({ route }) => {
         />
         <View style={styles.header}>
           <Text style={styles.title}>Hóa đơn chi tiết</Text>
-          <Text style={[styles.orderStatus, { backgroundColor: getOrderStatusColor(order?.data?.status) }]}>
+          <Text
+            style={[
+              styles.orderStatus,
+              { backgroundColor: getOrderStatusColor(order?.data?.status) },
+            ]}
+          >
             {order?.data?.status}
           </Text>
         </View>
@@ -74,29 +79,38 @@ const OrderDetailScreen = ({ route }) => {
         <View style={styles.orderInfo}>
           <Text style={styles.orderText}>
             Ngày đặt tiệc:
-            {moment(order?.data?.orderDate).format("DD/MM/YYYY")} lúc {moment(order?.data?.orderDate).format("HH:mm")}
+            {moment(order?.data?.orderDate).format("DD/MM/YYYY")} lúc{" "}
+            {moment(order?.data?.orderDate).format("HH:mm")}
           </Text>
-          <Text style={styles.orderText}>Tên người đại diện: {order?.data?.customerId?.name}</Text>
+          <Text style={styles.orderText}>
+            Tên người đại diện: {order?.data?.customerId?.name}
+          </Text>
           <Text style={styles.orderText}>Ghi chú: {order?.data?.notes}</Text>
         </View>
         {/* Các mục đã đặt hàng */}
         <View style={styles.itemsContainer}>
           {/* Item chính và item phụ */}
           <View style={styles.itemContainer}>
-            <Text style={styles.mainItem}>Tiệc {order?.data?.partyId?.name}</Text>
-            {services && services.map((services, index) => {
-              return (
-                <View key={index}>
-                  <Text style={styles.extraItem}>+ {services.name} x 1</Text>
-                </View>
-              );
-            })}
+            <Text style={styles.mainItem}>
+              Tiệc {order?.data?.partyId?.name}
+            </Text>
+            {services &&
+              services.map((services, index) => {
+                return (
+                  <View key={index}>
+                    <Text style={styles.extraItem}>+ {services.name} x 1</Text>
+                  </View>
+                );
+              })}
           </View>
           {/* Tổng giá tiền */}
-          <Text style={styles.totalPrice}>Tổng Thanh Toán: {order?.data?.total.toLocaleString("it-IT", {
-            style: "currency",
-            currency: "VND",
-          })}</Text>
+          <Text style={styles.totalPrice}>
+            Tổng Thanh Toán:{" "}
+            {order?.data?.total.toLocaleString("it-IT", {
+              style: "currency",
+              currency: "VND",
+            })}
+          </Text>
         </View>
       </View>
       <View style={styles.btnContainer}>
@@ -105,27 +119,32 @@ const OrderDetailScreen = ({ route }) => {
             style={styles.bookingBtn}
             onPress={() => handlePayment()}
           >
-            <Text style={{
-              textAlign: "center",
-              fontFamily: "Outfit-Medium",
-              color: Color.WHITE,
-              fontSize: 18,
-            }}>
-              Thanh toán</Text>
-          </TouchableOpacity>
-        )}
-        {order?.data?.status === "completed" ? (
-          (!order?.data?.reviews) ? (
-            <TouchableOpacity
-              style={styles.bookingBtn}
-              onPress={() => setShowModal(true)}
-            >
-              <Text style={{
+            <Text
+              style={{
                 textAlign: "center",
                 fontFamily: "Outfit-Medium",
                 color: Color.WHITE,
                 fontSize: 18,
-              }}>
+              }}
+            >
+              Thanh toán
+            </Text>
+          </TouchableOpacity>
+        )}
+        {order?.data?.status === "completed" ? (
+          !order?.data?.reviews ? (
+            <TouchableOpacity
+              style={styles.bookingBtn}
+              onPress={() => setShowModal(true)}
+            >
+              <Text
+                style={{
+                  textAlign: "center",
+                  fontFamily: "Outfit-Medium",
+                  color: Color.WHITE,
+                  fontSize: 18,
+                }}
+              >
                 Đánh giá
               </Text>
             </TouchableOpacity>
@@ -134,17 +153,29 @@ const OrderDetailScreen = ({ route }) => {
               <Text style={styles.mainItem}>Đánh giá của bạn</Text>
               <View style={styles.commentContainer}>
                 <View style={styles.avatarContainer}>
-                  <Image source={{ uri: order?.data?.customerId?.avatar }} style={styles.avatar} />
+                  <Image
+                    source={{ uri: order?.data?.customerId?.avatar }}
+                    style={styles.avatar}
+                  />
                 </View>
                 <View style={styles.commentContent}>
-                <Text style={styles.userName}>{order?.data?.customerId?.name}</Text>
+                  <Text style={styles.userName}>
+                    {order?.data?.customerId?.name}
+                  </Text>
                   <View style={styles.ratingContainer}>
                     {[...Array(order?.data?.rating || 0)].map((_, index) => (
-                      <Ionicons key={index} name="star" size={20} color="#FFD700" />
+                      <Ionicons
+                        key={index}
+                        name="star"
+                        size={20}
+                        color="#FFD700"
+                      />
                     ))}
                   </View>
                   <Text style={styles.commentText}>{order?.data?.reviews}</Text>
-                  <Text style={styles.commentTime}>{moment(order?.data?.updatedAt).format("DD/MM/YYYY")}</Text>
+                  <Text style={styles.commentTime}>
+                    {moment(order?.data?.updatedAt).format("DD/MM/YYYY")}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -159,33 +190,32 @@ const OrderDetailScreen = ({ route }) => {
         />
       </Modal>
     </View>
-
   );
 };
 
 const getOrderStatusColor = (status) => {
   //'pending', 'processing', 'completed', 'cancelled'
   switch (status) {
-    case 'pending':
-      return '#ff9800'; // Màu cam
-    case 'processing':
-      return '#2196f3'; // Màu xanh
-    case 'completed':
-      return '#4caf50'; // Màu xanh lá cây
-    case 'cancelled':
-      return '#f54242'
+    case "pending":
+      return "#ff9800"; // Màu cam
+    case "processing":
+      return "#2196f3"; // Màu xanh
+    case "completed":
+      return "#4caf50"; // Màu xanh lá cây
+    case "cancelled":
+      return "#f54242";
     default:
-      return '#000000'; // Màu đen mặc định
+      return "#000000"; // Màu đen mặc định
   }
 };
 
 const styles = StyleSheet.create({
   ratingContainer: {
-    position: 'absolute',
+    position: "absolute",
     top: 10,
     left: 200,
-    flexDirection: 'row',
-    justifyContent: 'flex-end'
+    flexDirection: "row",
+    justifyContent: "flex-end",
   },
   commentContainer: {
     flexDirection: "row",
@@ -220,39 +250,39 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   imageContainer: {
-    position: 'relative',
+    position: "relative",
   },
   backgroundImage: {
-    width: '100%',
+    width: "100%",
     height: 200, // Chiều cao của hình ảnh
-    resizeMode: 'cover',
+    resizeMode: "cover",
   },
   header: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
-    alignItems: 'left',
-    marginLeft: 10
+    alignItems: "left",
+    marginLeft: 10,
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 10,
-    color: 'white',
+    color: "white",
   },
   orderStatus: {
     width: 100,
     paddingHorizontal: 10,
     paddingVertical: 5,
-    color: '#ffffff',
+    color: "#ffffff",
     borderRadius: 5,
     marginBottom: 10,
-    textAlign: 'center'
+    textAlign: "center",
   },
   contentContainer: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     paddingTop: 20,
     paddingHorizontal: 20,
   },
@@ -260,9 +290,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   orderText: {
-    color: 'black',
+    color: "black",
     marginBottom: 5,
-    fontFamily: 'Outfit-Medium'
+    fontFamily: "Outfit-Medium",
   },
   itemsContainer: {
     marginBottom: 20,
@@ -271,7 +301,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   mainItem: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 5,
     fontSize: 24,
     color: Color.PRIMARY_LIGHT,
@@ -280,15 +310,15 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     marginLeft: 10,
     fontSize: 14,
-    color: 'black',
-    fontFamily: 'Outfit-Medium'
+    color: "black",
+    fontFamily: "Outfit-Medium",
   },
   totalPrice: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginTop: 10,
     fontSize: 20,
     color: Color.PRIMARY,
-    fontFamily: 'Outfit-Medium'
+    fontFamily: "Outfit-Medium",
   },
   btnContainer: {
     backgroundColor: Color.WHITE,
@@ -296,7 +326,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     gap: 8,
-    paddingBottom: 10
+    paddingBottom: 10,
   },
   bookingBtn: {
     padding: 15,
@@ -317,6 +347,5 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
-
 
 export default OrderDetailScreen;

@@ -21,12 +21,13 @@ import useConversation from "../../../zustand/useConversation";
 import PartyCommentSection from "./PartyCommentSection";
 import { useUser } from "@clerk/clerk-expo";
 import { ratingFormat } from "../../../Utils/Common";
-
+import { MaterialIcons } from "@expo/vector-icons";
 
 export default function PartyDetailSection({ navigation }) {
   const param = useRoute().params;
   const [party, setParty] = useState();
   const [showModal, setShowModal] = useState(false);
+  const [showModalReview, setShowModalReview] = useState(false);
   const { setSelectedConversation } = useConversation();
 
   useEffect(() => {
@@ -114,11 +115,28 @@ export default function PartyDetailSection({ navigation }) {
                     {party?.address}
                   </Text>
                 </View>
-                <View style={{ display: "flex", flexDirection: "row" }}>
-                  <Text style={{ fontFamily: "Outfit-Bold", fontSize: 25 }}>
-                    {ratingFormat(party?.rating)}
-                  </Text>
-                  <Ionicons name="star" size={24} color={Color.YELLOW_STAR} />
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    placeContent: "flex-end space-around",
+                    alignItems: "flex-end",
+                  }}
+                >
+                  <View style={{ display: "flex", flexDirection: "row" }}>
+                    <Text style={{ fontFamily: "Outfit-Bold", fontSize: 25 }}>
+                      {ratingFormat(party?.rating)}
+                    </Text>
+                    <Ionicons name="star" size={24} color={Color.YELLOW_STAR} />
+                  </View>
+
+                  <TouchableOpacity onPress={() => setShowModalReview(true)}>
+                    <MaterialIcons
+                      name="reviews"
+                      size={24}
+                      color={Color.PRIMARY}
+                    />
+                  </TouchableOpacity>
                 </View>
               </View>
               {/* Horizontal Line*/}
@@ -151,18 +169,23 @@ export default function PartyDetailSection({ navigation }) {
                   marginTop: 20,
                   marginBottom: 20,
                 }}
-              ></View>  
-              <Heading text={"Bình luận"}/>
-              {party && party?.reviews.map((reviews, index) => {
-              return (
-                <View key={index}>
-                    <PartyCommentSection comment={reviews}/>
-                </View>
-              );
-            })}
+              ></View>
+              <Heading text={"Bình luận"} />
+
+              <Modal animationType="slide" visible={showModalReview}>
+                {party && (
+                  <View>
+                    <PartyCommentSection
+                      comments={party?.reviews}
+                      showModalReview={() =>
+                        setShowModalReview(!showModalReview)
+                      }
+                    />
+                  </View>
+                )}
+              </Modal>
             </View>
             {/* Horizontail line */}
-
 
             <View style={styles.btnContainer}>
               <TouchableOpacity
@@ -244,6 +267,14 @@ const styles = StyleSheet.create({
     borderRadius: 99,
     textAlign: "center",
     flex: 1,
+  },
+  reviewBtn: {
+    padding: 15,
+    backgroundColor: Color.PRIMARY,
+    borderWidth: 1,
+    borderColor: Color.PRIMARY,
+    borderRadius: 99,
+    textAlign: "center",
   },
   messageBtn: {
     padding: 15,
