@@ -38,7 +38,7 @@ export default function CategorySection({ navigation }) {
   }
   return (
     <View style={{ marginTop: 15 }}>
-      <Heading text={"Phân loại"} isViewAll={true} />
+      <Heading text={"Phân loại"} isViewAll={false} />
       <FlatList
         data={categories.categories}
         numColumns={4}

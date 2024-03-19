@@ -96,20 +96,6 @@ export default function TabNavigation() {
         }}
       />
       <Tab.Screen
-        name="profile"
-        component={ProfileScreen}
-        options={{
-          tabBarLabel: ({ color }) => (
-            <Text style={{ color: color, fontSize: 12, marginTop: -7 }}>
-              Cá Nhân
-            </Text>
-          ),
-          tabBarIcon: ({ color, size }) => (
-            <FontAwesome name="user-o" size={size} color={color} />
-          ),
-        }}
-      />
-      <Tab.Screen
         name="historyRoot"
         component={BookingStack}
         options={{
@@ -119,7 +105,7 @@ export default function TabNavigation() {
             </Text>
           ),
           tabBarIcon: ({ color, size }) => (
-            <FontAwesome name="user-o" size={size} color={color} />
+            <FontAwesome name="history" size={size} color={color} />
           ),
           tabBarButton: (props) => (
             <CustomButton
@@ -152,6 +138,20 @@ export default function TabNavigation() {
           tabBarStyle: {
             display: "none",
           },
+        }}
+      />
+      <Tab.Screen
+        name="profile"
+        component={ProfileScreen}
+        options={{
+          tabBarLabel: ({ color }) => (
+            <Text style={{ color: color, fontSize: 12, marginTop: -7 }}>
+              Tài Khoản
+            </Text>
+          ),
+          tabBarIcon: ({ color, size }) => (
+            <FontAwesome name="user-o" size={size} color={color} />
+          ),
         }}
       />
     </Tab.Navigator>

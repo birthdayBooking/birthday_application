@@ -88,22 +88,22 @@ const HistoryScreen = () => {
               overflow: "hidden",
               textAlign: "center",
             },
-            item?.status === "complete"
+            item?.status === "completed"
               ? {
                   backgroundColor: Color.GREEN,
                   color: Color.LIGHT,
-                  width: "20%",
+                  width: "30%",
                 }
               : item?.status === "pending"
               ? {
                   backgroundColor: Color.RED,
                   color: Color.LIGHT,
-                  width: "20%",
+                  width: "30%",
                 }
               : {
                   color: Color.PRIMARY,
                   backgroundColor: Color.PRIMARY_LIGHT,
-                  width: "20%",
+                  width: "30%",
                 },
           ]}
         >

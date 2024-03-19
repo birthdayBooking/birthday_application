@@ -20,6 +20,7 @@ export default function PartyAboutMeSection({ party }) {
       >
         {party?.mainDetail}
       </Text>
+      <Heading text={"Tiện ích"} />
       {party?.perks.map((perk, index) => (
         <Text
           key={index}
