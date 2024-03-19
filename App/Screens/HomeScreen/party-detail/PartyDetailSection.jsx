@@ -18,6 +18,8 @@ import PartyPhotoSection from "./PartyPhotoSection";
 import PartyAboutMeSection from "./PartyAboutMeSection";
 import BookingModal from "./BookingModal";
 import useConversation from "../../../zustand/useConversation";
+import PartyCommentSection from "./PartyCommentSection";
+import { useUser } from "@clerk/clerk-expo";
 
 export default function PartyDetailSection({ navigation }) {
   const param = useRoute().params;
@@ -124,7 +126,25 @@ export default function PartyDetailSection({ navigation }) {
                 }}
               ></View>
               <PartyPhotoSection party={party} />
+              <View
+                style={{
+                  borderWidth: 0.4,
+                  borderColor: Color.GRAY,
+                  marginTop: 20,
+                  marginBottom: 20,
+                }}
+              ></View>  
+              <Heading text={"Bình luận"}/>
+              {party && party?.reviews.map((reviews, index) => {
+              return (
+                <View key={index}>
+                    <PartyCommentSection comment={reviews}/>
+                </View>
+              );
+            })}
             </View>
+            {/* Horizontail line */}
+
 
             <View style={styles.btnContainer}>
               <TouchableOpacity
