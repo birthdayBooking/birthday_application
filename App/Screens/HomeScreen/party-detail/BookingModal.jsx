@@ -1,3 +1,4 @@
+import * as Linking from "expo-linking";
 import {
   View,
   Text,
@@ -9,9 +10,9 @@ import {
   TextInput,
   Modal,
   Platform,
-  Linking,
   Alert,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState, useContext } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import CalendarPicker from "react-native-calendar-picker";
@@ -30,7 +31,6 @@ export default function BookingModal({ partyId, showModal, navigation }) {
   const [selectedDate, setSelectedDate] = useState(
     moment().add(2, "days").toDate()
   );
-
   const [openPopUp, setOpenPopUp] = useState(false);
   const [note, setNote] = useState();
   const [selectedServices, setSelectedServices] = useState([]);
@@ -38,8 +38,36 @@ export default function BookingModal({ partyId, showModal, navigation }) {
   const minDateCanBooking = moment().add(2, "days").toDate();
   const dispatch = useDispatch();
 
+  const mobileUrl = Linking.createURL();
+
+  const handleDeepLinking = async (event) => {
+    const data = Linking.parse(event.url);
+    if (data.queryParams.vnp_TransactionStatus === "00") {
+      const orderResponse = await AsyncStorage.getItem("order");
+      const api = {
+        status: "completed",
+      };
+      const responseVnPay = await fetch(
+        `https://birthday-backend-8sh5.onrender.com/api/v1/orders/payment-status/${orderResponse}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(api),
+        }
+      );
+
+      if (responseVnPay.status === 200) {
+        await AsyncStorage.removeItem("order");
+        navigation.navigate("payment");
+      }
+    }
+  };
+
   useEffect(() => {
     fetchServices();
+    Linking.addEventListener("url", handleDeepLinking);
   }, []);
 
   const fetchServices = async () => {
@@ -117,17 +145,16 @@ export default function BookingModal({ partyId, showModal, navigation }) {
             body: JSON.stringify(bookingData),
           }
         );
+        const responseApi = await response.json();
 
-        if (!response.ok) {
-          console.log(response);
-        }
+        await AsyncStorage.setItem("order", responseApi._id);
 
         const supported = await Linking.canOpenURL(
-          `https://birthday-backend-8sh5.onrender.com/api/v1/payment/create_payment_url?amount=${totalForBooking}`
+          `https://birthday-backend-8sh5.onrender.com/api/v1/payment/create_payment_url?amount=${totalForBooking}&mobileUrl=${mobileUrl}`
         );
         if (supported) {
           await Linking.openURL(
-            `https://birthday-backend-8sh5.onrender.com/api/v1/payment/create_payment_url?amount=${totalForBooking}`
+            `https://birthday-backend-8sh5.onrender.com/api/v1/payment/create_payment_url?amount=${totalForBooking}&mobileUrl=${mobileUrl}`
           );
         } else {
           Alert.alert(

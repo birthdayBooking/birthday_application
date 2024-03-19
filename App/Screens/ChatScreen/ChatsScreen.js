@@ -1,4 +1,10 @@
-import { StyleSheet, Text, Pressable, FlatList } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  Pressable,
+  FlatList,
+  RefreshControl,
+} from "react-native";
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import Conversations from "./Conversations";
@@ -9,9 +15,15 @@ import { unreadNotification } from "../../zustand/unreadNotificaiton";
 const ChatsScreen = () => {
   const [users, setUsers] = useState([]);
   const navigation = useNavigation();
-  const { conversations } = useGetConversations();
+  const { conversations, getConversations } = useGetConversations();
+  const [refreshing, setRefreshing] = useState(false);
   const { getLatestNotifications, markAsRead } = useListenMessages();
 
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    await getConversations();
+    setRefreshing(false);
+  };
   const renderItem = ({ item }) => {
     const unreadNotifications = unreadNotification(getLatestNotifications());
 
@@ -34,6 +46,9 @@ const ChatsScreen = () => {
       data={conversations}
       keyExtractor={(conversation) => conversation.conversationId}
       renderItem={renderItem}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+      }
     />
   );
 };

@@ -72,7 +72,9 @@ const Conversations = ({
         </View>
         <View style={{ flex: 1 }}>
           <Text style={{ fontSize: 15, fontWeight: "500" }}>
-            {item?.otherParticipant.lastName}
+            {item?.otherParticipant?.lastName
+              ? item?.otherParticipant?.lastName
+              : item?.otherParticipant?.name}
           </Text>
           {/* {item?.newMessage && (
           <Text style={{ marginTop: 3, color: "gray", fontWeight: "500" }}>
