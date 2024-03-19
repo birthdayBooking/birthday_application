@@ -20,6 +20,8 @@ import BookingModal from "./BookingModal";
 import useConversation from "../../../zustand/useConversation";
 import PartyCommentSection from "./PartyCommentSection";
 import { useUser } from "@clerk/clerk-expo";
+import { ratingFormat } from "../../../Utils/Common";
+
 
 export default function PartyDetailSection({ navigation }) {
   const param = useRoute().params;
@@ -57,52 +59,68 @@ export default function PartyDetailSection({ navigation }) {
               style={{ width: "100%", height: 240 }}
             />
             <View style={styles.infoContainer}>
-              <Text style={{ fontFamily: "Outfit-Bold", fontSize: 25 }}>
-                {party?.name}
-              </Text>
-              <Text style={{ fontFamily: "Outfit-Bold", fontSize: 25 }}>
-                {party?.price.toLocaleString("it-IT", {
-                  style: "currency",
-                  currency: "VND",
-                })}
-              </Text>
-              <View style={styles.subContainer}>
-                <Text
-                  style={{
-                    fontFamily: "Outfit-Medium",
-                    fontSize: 20,
-                    color: Color.PRIMARY,
-                  }}
-                >
-                  Host: {party?.hostId?.lastName}
-                </Text>
-                <Text
-                  style={{
-                    color: Color.PRIMARY,
-                    backgroundColor: Color.PRIMARY_LIGHT,
-                    padding: 5,
-                    borderRadius: 5,
-                    fontSize: 14,
-                    overflow: "hidden",
-                  }}
-                >
-                  {party?.category?.name}
-                </Text>
-              </View>
-              <Text
+              <View
                 style={{
-                  fontSize: 17,
-                  fontFamily: "Outfit-Regular",
-                  color: Color.GRAY,
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
                 }}
               >
-                <Ionicons
-                  name="location-sharp"
-                  size={24}
-                  color={Color.PRIMARY}
-                />
-                {party?.address}
-              </Text>
+                <View>
+                  <Text style={{ fontFamily: "Outfit-Bold", fontSize: 25 }}>
+                    {party?.name}
+                  </Text>
+                  <Text style={{ fontFamily: "Outfit-Bold", fontSize: 25 }}>
+                    {party?.price.toLocaleString("it-IT", {
+                      style: "currency",
+                      currency: "VND",
+                    })}
+                  </Text>
+                  <View style={styles.subContainer}>
+                    <Text
+                      style={{
+                        fontFamily: "Outfit-Medium",
+                        fontSize: 20,
+                        color: Color.PRIMARY,
+                      }}
+                    >
+                      Host: {party?.hostId?.lastName}
+                    </Text>
+                    <Text
+                      style={{
+                        color: Color.PRIMARY,
+                        backgroundColor: Color.PRIMARY_LIGHT,
+                        padding: 5,
+                        borderRadius: 5,
+                        fontSize: 14,
+                        overflow: "hidden",
+                      }}
+                    >
+                      {party?.category?.name}
+                    </Text>
+                  </View>
+                  <Text
+                    style={{
+                      fontSize: 17,
+                      fontFamily: "Outfit-Regular",
+                      color: Color.GRAY,
+                    }}
+                  >
+                    <Ionicons
+                      name="location-sharp"
+                      size={24}
+                      color={Color.PRIMARY}
+                    />
+                    {party?.address}
+                  </Text>
+                </View>
+                <View style={{ display: "flex", flexDirection: "row" }}>
+                  <Text style={{ fontFamily: "Outfit-Bold", fontSize: 25 }}>
+                    {ratingFormat(party?.rating)}
+                  </Text>
+                  <Ionicons name="star" size={24} color={Color.YELLOW_STAR} />
+                </View>
+              </View>
               {/* Horizontal Line*/}
               <View
                 style={{

@@ -10,5 +10,5 @@ export default {
   RED: "#A94438",
   RED_LIGHT: "#D24545",
   PERSIAN_PINK: "#F283B6",
-
+  YELLOW_STAR: "#FFCD3C",
 };
