@@ -6,11 +6,28 @@ import PartyCategorySection from "../Screens/HomeScreen/party-list/PartyCategory
 import PartyDetailSection from "../Screens/HomeScreen/party-detail/PartyDetailSection";
 import PaymentScreen from "../Screens/BookingScreen/PaymentScreen";
 import ChatMessagesScreen from "../Screens/ChatScreen/ChatMessagesScreen";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function HomeNavigation() {
   const Stack = createStackNavigator();
+  const persistenceKey = "persistenceKey";
+  const persistNavigationState = async (navState) => {
+    try {
+      await AsyncStorage.setItem(persistenceKey, JSON.stringify(navState));
+    } catch (err) {}
+  };
+  const loadNavigationState = async () => {
+    const jsonString = await AsyncStorage.getItem(persistenceKey);
+    return JSON.parse(jsonString);
+  };
+
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+      persistNavigationState={persistNavigationState}
+      loadNavigationState={loadNavigationState}
+    >
       <Stack.Screen
         name="home-main"
         component={HomeScreen}
