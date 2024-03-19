@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   StyleSheet,
+  RefreshControl,
 } from "react-native";
 import { UserType } from "../../context/UserContext";
 import { useNavigation } from "@react-navigation/native";
@@ -24,6 +25,7 @@ const HistoryScreen = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(false);
   const { userId } = useContext(UserType);
+  const [refreshing, setRefreshing] = useState(false);
   const navigation = useNavigation();
 
   const fetchOrders = async () => {
@@ -39,6 +41,11 @@ const HistoryScreen = () => {
       console.error("Lỗi khi lấy lịch sử mua hàng:", error);
       setLoading(false);
     }
+  };
+  const handleRefresh = () => {
+    setRefreshing(true);
+    fetchOrders();
+    setRefreshing(false);
   };
 
   useEffect(() => {
@@ -117,6 +124,9 @@ const HistoryScreen = () => {
           keyExtractor={(item) => item._id.toString()}
           style={styles.flatList}
           contentContainerStyle={{ padding: 10 }}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+          }
         />
       )}
     </View>

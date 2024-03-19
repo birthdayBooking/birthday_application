@@ -79,47 +79,68 @@ export default function BookingModal({ partyId, showModal, navigation }) {
       // Tạo bookingData từ các giá trị đã có
       const bookingData = {
         customerId: userId,
-        partyId: "65e043d9037d564848dc970f",
+        partyId: partyId?._id,
         extraService: selectedServices,
         time: selectedTime,
         total: totalForBooking,
         orderDate: selectedDate,
         notes: note,
+        address: partyId?.address,
       };
 
-      const response = await fetch(
-        "https://birthday-backend-8sh5.onrender.com/api/v1/orders/create",
+      const orderData = {
+        orderDate: selectedDate,
+        time: selectedTime,
+        address: partyId?.address,
+      };
+
+      const orderAvailible = await fetch(
+        "https://birthday-backend-8sh5.onrender.com/api/v1/orders/check-availability",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(bookingData),
+          body: JSON.stringify(orderData),
         }
       );
 
-      if (!response.ok) {
-        console.log(response);
-      }
-      
-      const supported = await Linking.canOpenURL(
-        `https://birthday-backend-8sh5.onrender.com/api/v1/payment/create_payment_url?amount=${totalForBooking}`
-      );
-      if (supported) {
-        await Linking.openURL(
+      const responseOrder = await orderAvailible.json();
+      if (responseOrder.available) {
+        const response = await fetch(
+          "https://birthday-backend-8sh5.onrender.com/api/v1/orders/create",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(bookingData),
+          }
+        );
+
+        if (!response.ok) {
+          console.log(response);
+        }
+
+        const supported = await Linking.canOpenURL(
           `https://birthday-backend-8sh5.onrender.com/api/v1/payment/create_payment_url?amount=${totalForBooking}`
         );
-      } else {
-        Alert.alert(
-          `Don't know how to open this URL: ${"https://birthday-backend-8sh5.onrender.com/api/v1/payment/create_payment_url"}`
-        );
-      }
+        if (supported) {
+          await Linking.openURL(
+            `https://birthday-backend-8sh5.onrender.com/api/v1/payment/create_payment_url?amount=${totalForBooking}`
+          );
+        } else {
+          Alert.alert(
+            `Don't know how to open this URL: ${"https://birthday-backend-8sh5.onrender.com/api/v1/payment/create_payment_url"}`
+          );
+        }
 
-      Toast.show({
-        type: "success",
-        text1: "Booking Created Successfully. 👋",
-      });
-      showModal(); // Hiển thị modal (nếu cần)
+        Toast.show({
+          type: "success",
+          text1: "Booking Created Successfully. 👋",
+        });
+        showModal(); // Hiển thị modal (nếu cần)
+      }
     } catch (error) {
       console.error("Error:", error);
       // Xử lý lỗi khi gọi API
