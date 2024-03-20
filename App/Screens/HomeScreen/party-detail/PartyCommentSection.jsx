@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  FlatList,
 } from "react-native";
 import { AirbnbRating } from "react-native-ratings";
 import Heading from "../../../Components/Heading";
@@ -16,6 +17,29 @@ import moment from "moment";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function PartyCommentSection({ comments, showModalReview }) {
+
+  function renderComments(comment) {
+    return (
+      <View key={comment.id} style={styles.commentContainer}>
+        <View style={styles.avatarContainer}>
+          <Image
+            source={{
+              uri: comment?.customerId?.avatar,
+            }}
+            style={styles.avatar}
+          />
+        </View>
+        <View style={styles.commentContent}>
+          <Text style={styles.userName}>{comment.customerId.name}</Text>
+          <Text style={styles.commentText}>{comment.comment}</Text>
+          <Text style={styles.commentTime}>
+           Đánh giá: {comment.rating} <Ionicons name="star" style={{color: 'yellow'}}/> {moment(comment.createdAt).format("DD/MM/YYYY")}
+          </Text>
+          
+        </View>
+      </View>
+    )
+  }
   return (
     <>
       <TouchableOpacity
@@ -37,14 +61,14 @@ export default function PartyCommentSection({ comments, showModalReview }) {
           Quay lại
         </Text>
       </TouchableOpacity>
-      <ScrollView>
+      {/* <ScrollView>
         {comments?.map((comment, index) => (
           <View key={index}>
             <View style={styles.commentContainer}>
               <View style={styles.avatarContainer}>
                 <Image
                   source={{
-                    uri: "https://s.hdnux.com/photos/51/23/24/10827008/4/1200x0.jpg",
+                    uri: comment?.customerId?.avatar,
                   }}
                   style={styles.avatar}
                 />
@@ -59,7 +83,12 @@ export default function PartyCommentSection({ comments, showModalReview }) {
             </View>
           </View>
         ))}
-      </ScrollView>
+      </ScrollView> */}
+      <FlatList
+        data={comments}
+        renderItem={({ item }) => renderComments(item)}
+        keyExtractor={item => item.id}
+      />
     </>
   );
 }

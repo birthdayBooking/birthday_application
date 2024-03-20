@@ -52,7 +52,7 @@ export default function PartyCategorySection({ navigation }) {
 
   return (
     <View style={{ padding: 20, paddingTop: 30 }}>
-      <PageHeading title={param?.categoryName + " Parties"} />
+      <PageHeading title={"Tiệc " + param?.categoryName} />
       {partyByCategories.length > 0 ? (
         <FlatList
           style={{ marginTop: 15 }}

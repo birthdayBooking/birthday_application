@@ -7,6 +7,7 @@ import {
   Button,
   TouchableOpacity,
   Image,
+  Alert,
 } from "react-native";
 import { AirbnbRating } from "react-native-ratings";
 import Heading from "../../../Components/Heading";
@@ -33,11 +34,12 @@ export default function PartyCommentModal({
         OrderId: commentdata?.id,
         partyId: commentdata?.partyId?.id,
       };
+      console.log("sent data: " + JSON.stringify(reviewData))
       const response = await fetch(
         "https://birthday-backend-8sh5.onrender.com/api/v1/reviews/reviewParty",
         {
           headers: {
-            Accept: "application/json",
+            "Accept": "application/json",
             "Content-Type": "application/json",
           },
           method: "POST",
@@ -45,18 +47,22 @@ export default function PartyCommentModal({
         }
       );
       const data = await response.json();
+      const orderId = data?.order?.id;
 
-      if (data) {
-        const orderId = data?.order?.id;
+      if (orderId) {
         navigation.navigate("Chi tiết đơn hàng", { orderId });
       } else {
         navigation.goBack();
       }
+      
     } catch (error) {
       console.log(error);
     }
   };
   const handleSubmitAndShowModal = () => {
+    if((!comment || comment.trim() === '')  || rating == 0){
+      return Alert.alert('Thông báo', 'Bạn cần điền các thông tin cần thiết')
+    }
     submitReviews();
     showModal();
   };
@@ -107,7 +113,7 @@ export default function PartyCommentModal({
           placeholder="Nhập bình luận của bạn..."
           value={comment}
           onChangeText={(text) => setComment(text)}
-          style={styles.input} // Sử dụng style đã định nghĩa
+          style={styles.input}
         />
       </TouchableOpacity>
 
