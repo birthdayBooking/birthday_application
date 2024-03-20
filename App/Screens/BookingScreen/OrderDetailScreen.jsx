@@ -1,3 +1,4 @@
+import * as Linking from "expo-linking";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import React, { useState, useEffect } from "react";
 import Color from "../../Utils/Color";
@@ -13,6 +14,7 @@ import {
 } from "react-native";
 import { formatMoney } from "../../Utils/Common";
 import moment from "moment";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { useUser } from "@clerk/clerk-expo";
 import PartyCommentModal from "../HomeScreen/party-detail/PartyCommentModal";
@@ -25,6 +27,35 @@ const OrderDetailScreen = ({ route }) => {
   const { user } = useUser();
   const param = useRoute().params;
   const navigation = useNavigation();
+
+  const mobileUrl = Linking.createURL();
+
+  const handleDeepLinking = async (event) => {
+    const data = Linking.parse(event.url);
+    if (data.queryParams.vnp_TransactionStatus === "00") {
+      const orderResponse = await AsyncStorage.getItem("order");
+      const api = {
+        status: "completed",
+      };
+      const responseVnPay = await fetch(
+        `https://birthday-backend-8sh5.onrender.com/api/v1/orders/payment-status/${orderResponse}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(api),
+        }
+      );
+
+      if (responseVnPay.status === 200) {
+        navigation.navigate("payment");
+      }
+    }
+  };
+  useEffect(async () => {
+    Linking.addEventListener("url", handleDeepLinking);
+  }, []);
 
   useEffect(() => {
     fetchOrderDetail(param.orderId);
@@ -53,6 +84,22 @@ const OrderDetailScreen = ({ route }) => {
       </View>
     );
   }
+
+  const handlePayment = async () => {
+    await AsyncStorage.setItem("order", order?.data._id);
+    const supported = await Linking.canOpenURL(
+      `https://birthday-backend-8sh5.onrender.com/api/v1/payment/create_payment_url?amount=${order?.data?.total}&mobileUrl=${mobileUrl}`
+    );
+    if (supported) {
+      await Linking.openURL(
+        `https://birthday-backend-8sh5.onrender.com/api/v1/payment/create_payment_url?amount=${order?.data?.total}&mobileUrl=${mobileUrl}`
+      );
+    } else {
+      Alert.alert(
+        `Don't know how to open this URL: ${"https://birthday-backend-8sh5.onrender.com/api/v1/payment/create_payment_url"}`
+      );
+    }
+  };
 
   return (
     <View style={styles.container}>

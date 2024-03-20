@@ -20,14 +20,12 @@ export default function SliderSection() {
     dispatch(fetchSliderData());
   }, [dispatch]);
 
-
   if (!sliders) {
     return <ActivityIndicator size="large" color="#0000ff" />;
   }
 
   return (
     <View>
-      <Heading text={"Gợi ý cho bạn"} />
       <FlatList
         data={sliders.sliders}
         horizontal={true}

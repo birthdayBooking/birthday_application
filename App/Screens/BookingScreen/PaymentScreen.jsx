@@ -8,11 +8,13 @@ import {
   StyleSheet,
   Alert,
   Linking,
+  TouchableOpacity,
 } from "react-native";
 import { formatMoney } from "../../Utils/Common";
 import Color from "../../Utils/Color";
+import { Ionicons } from "@expo/vector-icons";
 
-const PaymentScreen = ({navigation}) => {
+const PaymentScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.successIcon}>
@@ -21,7 +23,7 @@ const PaymentScreen = ({navigation}) => {
       <Text style={styles.message}>Đặt tiệc thành công!</Text>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate("home")}
+        onPress={() => navigation.navigate("home-main")}
       >
         <Text style={styles.buttonText}>Quay về trang chính</Text>
       </TouchableOpacity>
@@ -40,7 +42,7 @@ const styles = StyleSheet.create({
     marginBottom: 50,
   },
   message: {
-    fontFamily: 'Outfit-Medium',
+    fontFamily: "Outfit-Medium",
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 30,
@@ -52,7 +54,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   buttonText: {
-    fontFamily: 'Outfit-Medium',
+    fontFamily: "Outfit-Medium",
     fontSize: 18,
     color: "#ffffff",
   },
