@@ -2,6 +2,7 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
 import Color from "../../Utils/Color";
 import { useNavigation } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function PartyItem({ item }) {
   const navigation = useNavigation();
@@ -21,15 +22,6 @@ export default function PartyItem({ item }) {
         </Text>
         <Text
           style={{
-            fontSize: 13,
-            fontFamily: "Outfit-Regular",
-            color: Color.GRAY,
-          }}
-        >
-          {item?.hostId?.lastName}
-        </Text>
-        <Text
-          style={{
             fontSize: 10,
             fontFamily: "Outfit-Regular",
             padding: 3,
@@ -43,6 +35,17 @@ export default function PartyItem({ item }) {
         >
           {item?.category?.name}
         </Text>
+        <Text
+          style={{
+            fontSize: 13,
+            fontFamily: "Outfit-Regular",
+            color: Color.GRAY,
+          }}
+        >
+         Rates:  {item?.rating.toFixed(2)} <Ionicons name="star" style={{color : 'yellow'}}/>
+         
+        </Text>
+        
       </View>
     </TouchableOpacity>
   );

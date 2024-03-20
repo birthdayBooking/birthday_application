@@ -130,13 +130,6 @@ export default function PartyDetailSection({ navigation }) {
                     <Ionicons name="star" size={24} color={Color.YELLOW_STAR} />
                   </View>
 
-                  <TouchableOpacity onPress={() => setShowModalReview(true)}>
-                    <MaterialIcons
-                      name="reviews"
-                      size={24}
-                      color={Color.PRIMARY}
-                    />
-                  </TouchableOpacity>
                 </View>
               </View>
               {/* Horizontal Line*/}
@@ -170,18 +163,31 @@ export default function PartyDetailSection({ navigation }) {
                   marginBottom: 20,
                 }}
               ></View>
-              <Heading text={"Bình luận"} />
-
+              <Heading text={"Bình luận và Đánh giá"} />
+              <TouchableOpacity
+                style={styles.showCommentBtn}
+                onPress={() => setShowModalReview(true)}
+              >
+                <Text
+                  style={{
+                    textAlign: "center",
+                    fontFamily: "Outfit-Medium",
+                    color: Color.WHITE,
+                    fontSize: 18,
+                  }}
+                >
+                  Hiển thị tất cả ({party?.reviews.length}) bình luận
+                </Text>
+              </TouchableOpacity>
               <Modal animationType="slide" visible={showModalReview}>
-                {party && (
-                  <View>
+                {party && (   
                     <PartyCommentSection
                       comments={party?.reviews}
                       showModalReview={() =>
                         setShowModalReview(!showModalReview)
                       }
                     />
-                  </View>
+             
                 )}
               </Modal>
             </View>
@@ -264,6 +270,15 @@ const styles = StyleSheet.create({
     backgroundColor: Color.PRIMARY,
     borderWidth: 1,
     borderColor: Color.PRIMARY,
+    borderRadius: 99,
+    textAlign: "center",
+    flex: 1,
+  },
+  showCommentBtn: {
+    padding: 15,
+    backgroundColor: Color.PRIMARY_LIGHT,
+    borderWidth: 1,
+    borderColor: Color.PRIMARY_LIGHT,
     borderRadius: 99,
     textAlign: "center",
     flex: 1,

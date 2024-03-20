@@ -10,11 +10,21 @@ import {
   Linking,
 } from "react-native";
 import { formatMoney } from "../../Utils/Common";
+import Color from "../../Utils/Color";
 
-const PaymentScreen = () => {
+const PaymentScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
-      <Text>Thanh toán Thanh Công</Text>
+      <View style={styles.successIcon}>
+        <Ionicons name="checkmark-circle" size={150} color="green" />
+      </View>
+      <Text style={styles.message}>Đặt tiệc thành công!</Text>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate("home")}
+      >
+        <Text style={styles.buttonText}>Quay về trang chính</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -24,20 +34,27 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    padding: 20,
+    backgroundColor: "#ffffff",
   },
-  title: {
-    fontSize: 20,
+  successIcon: {
+    marginBottom: 50,
+  },
+  message: {
+    fontFamily: 'Outfit-Medium',
+    fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 20,
+    marginBottom: 30,
   },
-  input: {
-    borderWidth: 1,
-    borderColor: "#ccc",
+  button: {
+    backgroundColor: Color.PRIMARY,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
     borderRadius: 5,
-    padding: 10,
-    marginBottom: 20,
-    width: "80%",
+  },
+  buttonText: {
+    fontFamily: 'Outfit-Medium',
+    fontSize: 18,
+    color: "#ffffff",
   },
 });
 
